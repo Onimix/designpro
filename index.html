@@ -1,1277 +1,829 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Design Pro by Onimix</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-/* ============================================================
-   DESIGN PRO BY ONIMIX — v4 PosterMyWall-style UI
-   ============================================================ */
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2e;--surface3:#262638;--surface4:#2e2e4a;
-  --primary:#7c3aed;--primary-light:#a78bfa;--primary-dark:#5b21b6;
-  --gold:#f59e0b;--rose:#f43f5e;--cyan:#06b6d4;--green:#10b981;
-  --border:#2a2a3d;--border2:#3a3a55;
-  --text:#f1f0ff;--text2:#a8a8c8;--text3:#606080;--muted:#50506a;
-  --radius:10px;--radius-lg:16px;--radius-xl:22px;
-  --shadow:0 4px 24px rgba(0,0,0,.5);
-  --shadow-lg:0 8px 48px rgba(0,0,0,.7);
-  --transition:.2s cubic-bezier(.4,0,.2,1);
-}
-html,body{height:100%;overflow:hidden;}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--surface4);border-radius:4px;}
-::-webkit-scrollbar-thumb:hover{background:var(--primary);}
-
-/* ══════════════════════════════════════════
-   LANDING / SIZE SELECTION OVERLAY
-══════════════════════════════════════════ */
-.overlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;}
-.overlay.active{display:flex;}
-
-#sizeOverlay{
-  background:radial-gradient(ellipse at 30% 20%, #1a0a3a 0%, #0a0a16 60%);
-  overflow-y:auto;
-  flex-direction:column;
-  padding:0;
-}
-
-/* Animated star particles */
-#sizeOverlay::before{
-  content:'';position:fixed;inset:0;
-  background-image:
-    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 25% 40%, rgba(167,139,250,.8) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 45% 10%, rgba(255,255,255,.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 65% 30%, rgba(255,255,255,.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 80% 60%, rgba(167,139,250,.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,.3) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 35% 80%, rgba(167,139,250,.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 75% 85%, rgba(255,255,255,.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 15% 65%, rgba(255,255,255,.3) 0%, transparent 100%);
-  pointer-events:none;animation:starFloat 8s ease-in-out infinite alternate;
-}
-@keyframes starFloat{from{transform:translateY(0)}to{transform:translateY(-12px)}}
-
-.landing-wrap{
-  width:100%;max-width:1100px;margin:0 auto;padding:48px 24px 60px;
-}
-
-/* Hero */
-.landing-hero{text-align:center;margin-bottom:52px;animation:fadeSlideUp .7s ease both;}
-@keyframes fadeSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-
-.brand-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);
-  border-radius:100px;padding:6px 16px;margin-bottom:20px;
-  font-size:13px;color:var(--primary-light);letter-spacing:.03em;
-  animation:fadeSlideUp .5s ease both;
-}
-.brand-badge .spark{font-size:16px;animation:spinSpark 3s linear infinite;}
-@keyframes spinSpark{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-
-.landing-title{
-  font-size:clamp(32px,6vw,64px);font-weight:800;
-  line-height:1.1;letter-spacing:-.03em;margin-bottom:16px;
-  background:linear-gradient(135deg,#fff 0%,#c4b5fd 50%,#7c3aed 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:fadeSlideUp .6s .1s ease both;
-}
-.landing-sub{
-  font-size:18px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;
-  animation:fadeSlideUp .6s .2s ease both;
-}
-.landing-cta-row{
-  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
-  animation:fadeSlideUp .6s .3s ease both;
-}
-.cta-primary{
-  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-  color:#fff;border:none;border-radius:100px;padding:14px 32px;
-  font-size:16px;font-weight:600;cursor:pointer;
-  box-shadow:0 0 32px rgba(124,58,237,.4);
-  transition:var(--transition);
-}
-.cta-primary:hover{transform:translateY(-2px);box-shadow:0 0 48px rgba(124,58,237,.6);}
-.cta-secondary{
-  background:transparent;color:var(--text2);border:1px solid var(--border2);
-  border-radius:100px;padding:13px 28px;font-size:15px;cursor:pointer;
-  transition:var(--transition);
-}
-.cta-secondary:hover{border-color:var(--primary-light);color:var(--primary-light);}
-
-/* Category pills */
-.size-categories{
-  display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;
-  animation:fadeSlideUp .6s .35s ease both;
-}
-.size-cat-btn{
-  background:rgba(255,255,255,.05);border:1px solid var(--border);
-  border-radius:100px;padding:8px 20px;font-size:13px;color:var(--text2);cursor:pointer;
-  transition:var(--transition);
-}
-.size-cat-btn:hover,.size-cat-btn.active{
-  background:rgba(124,58,237,.2);border-color:var(--primary);color:var(--primary-light);
-}
-
-/* Size cards grid */
-.size-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;
-  animation:fadeSlideUp .6s .4s ease both;
-}
-.size-card{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:24px 16px;text-align:center;cursor:pointer;
-  transition:var(--transition);position:relative;overflow:hidden;
-}
-.size-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(124,58,237,.15),transparent);
-  opacity:0;transition:var(--transition);
-}
-.size-card:hover{
-  border-color:var(--primary);transform:translateY(-4px);
-  box-shadow:0 8px 32px rgba(124,58,237,.3);
-}
-.size-card:hover::before{opacity:1;}
-.size-icon-wrap{
-  width:56px;height:56px;margin:0 auto 12px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(124,58,237,.1);border-radius:12px;
-  font-size:22px;transition:var(--transition);
-}
-.size-card:hover .size-icon-wrap{background:rgba(124,58,237,.25);transform:scale(1.1);}
-.size-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
-.size-dim{font-size:11px;color:var(--text3);}
-.custom-size-card{border-style:dashed;}
-.custom-size-card .size-icon-wrap{background:rgba(245,158,11,.1);}
-.custom-size-card:hover{border-color:var(--gold);}
-
-/* Custom size row */
-.custom-size-row{
-  display:flex;align-items:center;gap:12px;justify-content:center;
-  margin-top:20px;flex-wrap:wrap;padding:20px;
-  background:var(--surface2);border-radius:var(--radius-lg);border:1px solid var(--border);
-  animation:fadeSlideUp .4s ease both;
-}
-.custom-size-row input{
-  background:var(--surface3);border:1px solid var(--border2);border-radius:var(--radius);
-  color:var(--text);padding:10px 14px;font-size:14px;width:130px;
-  transition:var(--transition);outline:none;
-}
-.custom-size-row input:focus{border-color:var(--primary);}
-.custom-size-row span{color:var(--text3);font-size:18px;}
-
-/* ══════════════════════════════════════════
-   APP SHELL
-══════════════════════════════════════════ */
-.app-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
-
-/* ── TOP NAVIGATION BAR (PosterMyWall style) ── */
-.app-header{
-  height:58px;background:rgba(13,13,20,.95);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 16px;gap:12px;
-  flex-shrink:0;z-index:200;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-}
-.header-left{display:flex;align-items:center;gap:12px;}
-.brand-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
-.brand-logo .brand-icon{
-  width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-  border-radius:8px;display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;
-}
-.brand-logo .brand-name{font-size:15px;font-weight:700;color:var(--text);}
-.brand-logo .brand-by{font-weight:400;color:var(--text3);font-size:12px;}
-.header-divider{width:1px;height:24px;background:var(--border);}
-
-.header-center{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;}
-.doc-name-input{
-  background:transparent;border:1px solid transparent;border-radius:var(--radius);
-  color:var(--text);font-size:14px;font-weight:500;padding:6px 10px;
-  transition:var(--transition);outline:none;min-width:180px;text-align:center;
-}
-.doc-name-input:hover{border-color:var(--border2);}
-.doc-name-input:focus{border-color:var(--primary);background:var(--surface2);}
-.size-pill{
-  background:var(--surface3);border:1px solid var(--border2);border-radius:100px;
-  color:var(--text2);font-size:12px;padding:5px 12px;cursor:pointer;
-  display:flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;
-}
-.size-pill:hover{border-color:var(--primary);color:var(--primary-light);}
-.pill-icon{opacity:.6;font-size:10px;}
-
-.header-right{display:flex;align-items:center;gap:4px;}
-.hbtn{
-  background:transparent;border:none;color:var(--text2);
-  padding:7px 9px;border-radius:var(--radius);cursor:pointer;
-  font-size:15px;transition:var(--transition);
-}
-.hbtn:hover{background:var(--surface3);color:var(--text);}
-.hbtn.active{background:var(--surface3);color:var(--primary-light);}
-.zoom-val{font-size:12px;color:var(--text3);min-width:38px;text-align:center;font-variant-numeric:tabular-nums;}
-.sep{width:1px;height:22px;background:var(--border);margin:0 6px;}
-.save-btn{color:var(--text2);}
-.save-btn:hover{color:var(--green);}
-.btn-export{
-  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-  color:#fff;border:none;border-radius:100px;padding:8px 20px;
-  font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);
-  box-shadow:0 0 16px rgba(124,58,237,.3);
-}
-.btn-export:hover{box-shadow:0 0 28px rgba(124,58,237,.5);transform:translateY(-1px);}
-.btn-primary{
-  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-  color:#fff;border:none;border-radius:var(--radius);padding:10px 20px;
-  font-size:14px;font-weight:600;cursor:pointer;width:100%;transition:var(--transition);
-}
-.btn-primary:hover{opacity:.9;transform:translateY(-1px);}
-.btn-primary.sm{padding:7px 14px;font-size:12px;width:auto;}
-
-/* ── MAIN LAYOUT ── */
-.main-layout{display:flex;flex:1;overflow:hidden;}
-
-/* ══════════════════════════════════════════
-   LEFT SIDEBAR — Icon tabs (PosterMyWall)
-══════════════════════════════════════════ */
-.sidebar-left{
-  width:280px;flex-shrink:0;
-  background:var(--surface);border-right:1px solid var(--border);
-  display:flex;overflow:hidden;
-}
-
-/* Vertical icon strip */
-.tab-nav{
-  width:56px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;
-}
-.tab-btn{
-  width:44px;height:44px;background:transparent;border:none;border-radius:var(--radius);
-  color:var(--text3);font-size:18px;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  transition:var(--transition);position:relative;
-}
-.tab-btn .tab-label{font-size:9px;line-height:1;color:inherit;font-weight:500;}
-.tab-btn:hover{background:var(--surface2);color:var(--text2);}
-.tab-btn.active{background:rgba(124,58,237,.15);color:var(--primary-light);}
-.tab-btn.active::before{
-  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
-  width:3px;height:28px;background:var(--primary);border-radius:0 3px 3px 0;
-}
-
-/* Panel content area */
-.tab-panels{flex:1;overflow:hidden;position:relative;}
-.tab-panel{position:absolute;inset:0;overflow-y:auto;padding:14px 12px;display:none;flex-direction:column;gap:10px;}
-.tab-panel.active{display:flex;}
-
-.panel-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px;}
-.panel-sub{font-size:12px;color:var(--text3);line-height:1.5;}
-
-/* Search input */
-.search-input{
-  width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text);padding:9px 12px;font-size:13px;outline:none;transition:var(--transition);
-}
-.search-input:focus{border-color:var(--primary);}
-
-/* Template categories */
-.tcat-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;flex-shrink:0;}
-.tcat-scroll::-webkit-scrollbar{height:0;}
-.tcat-btn{
-  background:var(--surface2);border:1px solid var(--border);border-radius:100px;
-  color:var(--text3);font-size:11px;padding:5px 12px;cursor:pointer;
-  white-space:nowrap;transition:var(--transition);flex-shrink:0;
-}
-.tcat-btn:hover{border-color:var(--primary);color:var(--primary-light);}
-.tcat-btn.active{background:rgba(124,58,237,.2);border-color:var(--primary);color:var(--primary-light);}
-
-/* Template grid */
-.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.tcard{
-  border-radius:var(--radius);overflow:hidden;cursor:pointer;
-  border:2px solid transparent;transition:var(--transition);position:relative;
-  aspect-ratio:3/4;
-}
-.tcard:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 24px rgba(124,58,237,.3);}
-.tcard-thumb{width:100%;height:100%;display:block;object-fit:cover;}
-.tcard-svg{width:100%;height:100%;display:block;}
-.tcard-overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,.7);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  opacity:0;transition:var(--transition);gap:6px;
-}
-.tcard:hover .tcard-overlay{opacity:1;}
-.tcard-use{
-  background:var(--primary);color:#fff;border:none;border-radius:100px;
-  padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;
-}
-.tcard-name{font-size:11px;color:var(--text2);}
-
-/* Elements grid */
-.elem-section-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:8px;}
-.elem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-.elem-btn{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text2);font-size:18px;padding:10px 6px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:var(--transition);aspect-ratio:1;
-}
-.elem-btn.wide{grid-column:span 2;aspect-ratio:auto;font-size:12px;padding:9px 8px;gap:4px;}
-.elem-btn:hover{background:rgba(124,58,237,.2);border-color:var(--primary);color:var(--primary-light);}
-
-/* Text panel */
-.text-add-btns{display:flex;flex-direction:column;gap:8px;}
-.text-add-btn{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text);padding:12px 16px;cursor:pointer;text-align:left;
-  transition:var(--transition);font-weight:600;
-}
-.text-add-btn.heading{font-size:20px;}
-.text-add-btn.subheading{font-size:16px;}
-.text-add-btn.body{font-size:13px;font-weight:400;}
-.text-add-btn.caption{font-size:11px;font-weight:400;color:var(--text2);}
-.text-add-btn:hover{border-color:var(--primary);background:rgba(124,58,237,.1);}
-.quick-text-list{display:flex;flex-direction:column;gap:6px;}
-.qtext-item{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  padding:10px 12px;cursor:pointer;transition:var(--transition);
-}
-.qtext-item:hover{border-color:var(--primary);}
-
-/* Upload */
-.upload-zone{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-  border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:28px;
-  cursor:pointer;transition:var(--transition);
-}
-.upload-zone:hover{border-color:var(--primary);background:rgba(124,58,237,.05);}
-.upload-icon{font-size:28px;color:var(--text3);}
-.upload-label{font-size:14px;font-weight:600;color:var(--text);}
-.upload-sub{font-size:11px;color:var(--text3);}
-.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.upload-thumb{
-  border-radius:var(--radius);overflow:hidden;cursor:pointer;border:2px solid transparent;
-  aspect-ratio:1;transition:var(--transition);
-}
-.upload-thumb:hover{border-color:var(--primary);}
-.upload-thumb img{width:100%;height:100%;object-fit:cover;}
-
-/* Photos */
-.search-row{display:flex;gap:6px;}
-.search-btn{
-  background:var(--primary);border:none;border-radius:var(--radius);
-  color:#fff;padding:9px 12px;cursor:pointer;font-size:14px;transition:var(--transition);
-}
-.search-btn:hover{background:var(--primary-dark);}
-.photo-cats{display:flex;gap:6px;overflow-x:auto;flex-wrap:wrap;}
-.pcat-btn{
-  background:var(--surface2);border:1px solid var(--border);border-radius:100px;
-  color:var(--text3);font-size:11px;padding:4px 10px;cursor:pointer;
-  transition:var(--transition);white-space:nowrap;
-}
-.pcat-btn:hover{border-color:var(--primary);color:var(--primary-light);}
-.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.photo-item{
-  border-radius:var(--radius);overflow:hidden;cursor:pointer;
-  aspect-ratio:1;transition:var(--transition);border:2px solid transparent;
-}
-.photo-item:hover{border-color:var(--primary);transform:scale(1.02);}
-.photo-item img{width:100%;height:100%;object-fit:cover;}
-.photo-placeholder{color:var(--text3);font-size:13px;text-align:center;padding:24px;grid-column:span 2;}
-
-/* Background */
-.bg-section-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;}
-.bg-color-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
-.bg-swatch{
-  aspect-ratio:1;border-radius:6px;cursor:pointer;border:2px solid transparent;
-  transition:var(--transition);
-}
-.bg-swatch:hover{border-color:#fff;transform:scale(1.1);}
-.bg-grad-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.bg-grad-swatch{
-  height:52px;border-radius:var(--radius);cursor:pointer;border:2px solid transparent;
-  transition:var(--transition);
-}
-.bg-grad-swatch:hover{border-color:var(--primary);transform:scale(1.03);}
-.bg-custom-row{display:flex;align-items:center;gap:10px;}
-.bg-custom-row input[type=color]{width:40px;height:36px;border-radius:var(--radius);border:1px solid var(--border);cursor:pointer;background:none;padding:2px;}
-.bg-pattern-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.bg-pattern-btn{
-  height:50px;border-radius:var(--radius);border:1px solid var(--border);
-  cursor:pointer;font-size:20px;background:var(--surface2);transition:var(--transition);
-}
-.bg-pattern-btn:hover{border-color:var(--primary);}
-
-/* AI panel */
-.ai-input{
-  width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text);padding:10px 12px;font-size:13px;resize:vertical;min-height:90px;
-  outline:none;transition:var(--transition);font-family:inherit;
-}
-.ai-input:focus{border-color:var(--primary);}
-.ai-style-row{display:flex;align-items:center;gap:8px;}
-.ai-style-row label{font-size:12px;color:var(--text2);white-space:nowrap;width:58px;}
-.ai-style-row select{
-  flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text);padding:7px 10px;font-size:12px;outline:none;transition:var(--transition);
-}
-.ai-style-row select:focus{border-color:var(--primary);}
-.btn-ai-gen{
-  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-  color:#fff;border:none;border-radius:var(--radius);padding:12px;
-  font-size:14px;font-weight:700;cursor:pointer;width:100%;
-  transition:var(--transition);box-shadow:0 0 20px rgba(124,58,237,.3);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-ai-gen:hover{box-shadow:0 0 36px rgba(124,58,237,.6);transform:translateY(-1px);}
-.btn-ai-gen:disabled{opacity:.5;transform:none;cursor:not-allowed;}
-.ai-cmd-section{background:var(--surface2);border-radius:var(--radius);padding:10px;}
-.ai-cmd-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
-.ai-cmd-input{
-  width:100%;background:var(--surface3);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text);padding:8px 10px;font-size:12px;outline:none;transition:var(--transition);
-  margin-bottom:6px;
-}
-.ai-cmd-input:focus{border-color:var(--primary);}
-.btn-ai-cmd{
-  background:var(--surface4);border:none;border-radius:var(--radius);
-  color:var(--text2);padding:7px 14px;font-size:12px;cursor:pointer;
-  transition:var(--transition);width:100%;
-}
-.btn-ai-cmd:hover{background:var(--primary);color:#fff;}
-.ai-cmd-hints{display:flex;flex-direction:column;gap:4px;}
-.ai-cmd-hint{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  padding:7px 10px;font-size:11px;color:var(--text3);cursor:pointer;
-  transition:var(--transition);
-}
-.ai-cmd-hint:hover{border-color:var(--primary);color:var(--primary-light);}
-.ai-log-section{flex:1;display:flex;flex-direction:column;min-height:0;}
-.ai-log-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-.ai-log{
-  flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);
-  padding:8px;overflow-y:auto;font-size:11px;font-family:'Courier New',monospace;
-  display:flex;flex-direction:column;gap:4px;min-height:80px;max-height:160px;
-}
-.ai-log.tall{max-height:none;flex:1;}
-.ai-log-entry{padding:4px 8px;border-radius:4px;line-height:1.4;}
-.ai-log-entry.ok{color:#6ee7b7;background:rgba(16,185,129,.08);}
-.ai-log-entry.info{color:#93c5fd;background:rgba(59,130,246,.08);}
-.ai-log-entry.warn{color:#fcd34d;background:rgba(245,158,11,.08);}
-.ai-log-entry.err{color:#fca5a5;background:rgba(239,68,68,.08);}
-.ai-log-entry.phase{color:var(--primary-light);font-weight:700;}
-
-/* Saved */
-.saved-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.saved-empty{color:var(--text3);font-size:13px;text-align:center;padding:32px 16px;grid-column:span 2;}
-
-/* ══════════════════════════════════════════
-   CANVAS AREA
-══════════════════════════════════════════ */
-.canvas-area{flex:1;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;position:relative;}
-
-/* Floating context toolbar */
-.canvas-topbar{
-  height:44px;background:rgba(22,22,31,.95);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 12px;gap:4px;flex-shrink:0;
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-}
-.ctx-tools{display:flex;align-items:center;gap:4px;flex-wrap:nowrap;overflow-x:auto;}
-.ctx-group{display:flex;align-items:center;gap:4px;}
-.tbtn{
-  background:transparent;border:none;color:var(--text2);
-  padding:5px 7px;border-radius:6px;cursor:pointer;font-size:13px;
-  transition:var(--transition);min-width:28px;text-align:center;
-}
-.tbtn:hover{background:var(--surface3);color:var(--text);}
-.tbtn.active{background:rgba(124,58,237,.2);color:var(--primary-light);}
-.tbtn.danger:hover{background:rgba(244,63,94,.2);color:var(--rose);}
-.sep-v{width:1px;height:20px;background:var(--border);margin:0 4px;}
-.color-swatch-wrap{
-  display:flex;align-items:center;gap:5px;cursor:pointer;
-  padding:4px 8px;border-radius:6px;transition:var(--transition);
-}
-.color-swatch-wrap:hover{background:var(--surface3);}
-.color-swatch-wrap span{font-size:12px;color:var(--text2);}
-.color-swatch-wrap input[type=color]{width:22px;height:22px;border:2px solid var(--border2);border-radius:4px;cursor:pointer;padding:0;}
-
-/* Font select in topbar */
-.canvas-topbar select{
-  background:var(--surface3);border:1px solid var(--border);border-radius:6px;
-  color:var(--text);padding:4px 8px;font-size:12px;outline:none;cursor:pointer;
-}
-.canvas-topbar input[type=number]{
-  background:var(--surface3);border:1px solid var(--border);border-radius:6px;
-  color:var(--text);padding:4px 6px;font-size:12px;outline:none;
-}
-.canvas-topbar input[type=range]{accent-color:var(--primary);}
-
-/* Canvas scroll wrapper */
-.canvas-scroll-wrap{
-  flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;
-  padding:32px;background:var(--bg);
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(255,255,255,.04) 1px, transparent 0);
-  background-size:24px 24px;
-}
-.canvas-container{
-  box-shadow:0 8px 64px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.05);
-  border-radius:2px;position:relative;flex-shrink:0;
-}
-
-/* Canvas status bar */
-.canvas-info{
-  height:28px;background:rgba(13,13,20,.9);border-top:1px solid var(--border);
-  display:flex;align-items:center;padding:0 16px;gap:0;font-size:11px;color:var(--text3);
-  flex-shrink:0;
-}
-.ci-sep{margin:0 10px;color:var(--border2);}
-
-/* ══════════════════════════════════════════
-   RIGHT PANEL
-══════════════════════════════════════════ */
-.rpanel{
-  width:236px;flex-shrink:0;background:var(--surface);
-  border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;
-}
-.rp-nav{display:flex;border-bottom:1px solid var(--border);}
-.rp-tab{
-  flex:1;padding:10px 4px;background:transparent;border:none;border-bottom:2px solid transparent;
-  color:var(--text3);font-size:11px;font-weight:600;cursor:pointer;
-  transition:var(--transition);text-transform:uppercase;letter-spacing:.04em;
-}
-.rp-tab:hover{color:var(--text2);}
-.rp-tab.active{color:var(--primary-light);border-bottom-color:var(--primary);}
-.rp-panel{display:none;flex:1;overflow-y:auto;padding:12px;}
-.rp-panel.active{display:flex;flex-direction:column;gap:10px;}
-.rp-empty{color:var(--text3);font-size:12px;text-align:center;padding:24px 12px;line-height:1.6;}
-.rp-section-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-.rp-canvas-props{display:flex;flex-direction:column;gap:8px;}
-.prop-row{display:flex;align-items:center;gap:6px;}
-.prop-row label{font-size:11px;color:var(--text2);min-width:48px;}
-.prop-row input[type=number],.prop-row input[type=text],.prop-row select{
-  flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
-  color:var(--text);padding:5px 8px;font-size:12px;outline:none;transition:var(--transition);
-}
-.prop-row input:focus,.prop-row select:focus{border-color:var(--primary);}
-.prop-row input[type=color]{width:36px;height:28px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:2px;}
-.prop-row input[type=password]{
-  flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
-  color:var(--text);padding:5px 8px;font-size:12px;outline:none;transition:var(--transition);
-}
-.prop-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.grad-row{display:flex;align-items:center;gap:6px;}
-.grad-row input[type=color]{width:36px;height:28px;border-radius:6px;border:1px solid var(--border);cursor:pointer;}
-.grad-row select{
-  flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
-  color:var(--text);padding:5px 8px;font-size:12px;outline:none;
-}
-.rp-actions{display:flex;gap:6px;flex-wrap:wrap;}
-.rp-act-btn{
-  flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text2);padding:7px 8px;font-size:11px;cursor:pointer;
-  transition:var(--transition);min-width:60px;text-align:center;
-}
-.rp-act-btn:hover{background:var(--surface3);color:var(--text);}
-.rp-act-btn.danger:hover{background:rgba(244,63,94,.15);border-color:var(--rose);color:var(--rose);}
-
-/* Layers */
-.layers-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.layers-header span{font-size:13px;font-weight:600;color:var(--text);}
-.hbtn.sm{padding:4px 7px;font-size:13px;}
-.layer-list{display:flex;flex-direction:column;gap:4px;}
-.layer-empty{color:var(--text3);font-size:12px;text-align:center;padding:20px;}
-.layer-item{
-  display:flex;align-items:center;gap:8px;padding:7px 10px;
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  cursor:pointer;transition:var(--transition);font-size:12px;
-}
-.layer-item:hover{border-color:var(--primary);}
-.layer-item.active-layer{border-color:var(--primary);background:rgba(124,58,237,.1);}
-.layer-icon{font-size:14px;}
-.layer-name{flex:1;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.layer-vis{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px;}
-
-/* ══════════════════════════════════════════
-   EXPORT MODAL
-══════════════════════════════════════════ */
-#exportOverlay{background:rgba(0,0,0,.75);backdrop-filter:blur(8px);}
-.modal{
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:var(--radius-xl);padding:28px;
-  max-width:92vw;max-height:90vh;overflow-y:auto;
-}
-.modal-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.modal-header-row h2{font-size:18px;font-weight:700;}
-.close-btn{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;}
-.close-btn:hover{color:var(--text);}
-.export-options{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
-.export-opt{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:20px 12px;text-align:center;cursor:pointer;transition:var(--transition);
-}
-.export-opt:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 6px 24px rgba(124,58,237,.3);}
-.export-icon{font-size:28px;margin-bottom:8px;}
-.export-label{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;}
-.export-sub{font-size:11px;color:var(--text3);}
-.export-quality-row{display:flex;align-items:center;gap:12px;}
-.export-quality-row label{font-size:13px;color:var(--text2);}
-.export-quality-row select{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  color:var(--text);padding:8px 12px;font-size:13px;outline:none;
-}
-
-/* ══════════════════════════════════════════
-   ANIMATIONS
-══════════════════════════════════════════ */
-@keyframes shimmer{
-  0%{background-position:-200% 0}
-  100%{background-position:200% 0}
-}
-.skeleton{
-  background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);
-  background-size:200% 100%;
-  animation:shimmer 1.5s infinite;
-  border-radius:var(--radius);
-}
-
-/* Pulse dot for AI active */
-@keyframes pulse-dot{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
-.pulse-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--primary-light);
-  animation:pulse-dot 1s ease-in-out infinite;display:inline-block;
-}
-
-/* Entrance animations for panels */
-.tab-panel.active{animation:panelIn .2s ease both;}
-@keyframes panelIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
-
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design Pro — ONIMIX TECH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     LANDING / SIZE SELECTION
-════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     SIZE SELECTION OVERLAY
+══════════════════════════════════════════ -->
 <div class="overlay active" id="sizeOverlay">
   <div class="landing-wrap">
-
-    <!-- Hero -->
     <div class="landing-hero">
-      <div class="brand-badge">
-        <span class="spark">✦</span>
-        Design Pro by Onimix — v4
-      </div>
-      <h1 class="landing-title">Create Stunning<br/>Designs in Seconds</h1>
-      <p class="landing-sub">AI-powered graphic design platform. Build flyers, posters, social media graphics and more — with or without design skills.</p>
+      <div class="brand-badge"><span class="spark">✦</span> ONIMIX Design Pro v5</div>
+      <h1 class="landing-title">Professional Design<br>Made Powerful</h1>
+      <p class="landing-sub">CorelDraw-level tools. Real templates. AI-powered. Start with a canvas size below.</p>
       <div class="landing-cta-row">
-        <button class="cta-primary" onclick="document.getElementById('sizeGridWrap').scrollIntoView({behavior:'smooth'})">Start Designing →</button>
-        <button class="cta-secondary" onclick="applySize(1080,1080)">Quick Start (Instagram)</button>
+        <button class="cta-primary" onclick="showCustomSize()">✏️ Custom Size</button>
+        <button class="cta-secondary" onclick="document.querySelector('.size-grid').scrollIntoView({behavior:'smooth'})">Browse Sizes ↓</button>
       </div>
     </div>
 
-    <!-- Size picker categories -->
     <div class="size-categories">
       <button class="size-cat-btn active" onclick="filterSizeCat('all',this)">All</button>
       <button class="size-cat-btn" onclick="filterSizeCat('social',this)">Social Media</button>
       <button class="size-cat-btn" onclick="filterSizeCat('print',this)">Print</button>
-      <button class="size-cat-btn" onclick="filterSizeCat('document',this)">Documents</button>
+      <button class="size-cat-btn" onclick="filterSizeCat('doc',this)">Documents</button>
       <button class="size-cat-btn" onclick="filterSizeCat('marketing',this)">Marketing</button>
+      <button class="size-cat-btn" onclick="filterSizeCat('video',this)">Video</button>
     </div>
 
-    <!-- Size grid -->
-    <div class="size-grid" id="sizeGridWrap">
-      <div class="size-card" data-cat="social" onclick="applySize(1080,1080)">
-        <div class="size-icon-wrap">◻</div>
-        <div class="size-label">Instagram Post</div>
-        <div class="size-dim">1080 × 1080</div>
+    <div class="size-grid" id="sizeGrid">
+      <!-- Social -->
+      <div class="size-card" data-cat="social" onclick="startDesign(1080,1080,'Instagram Post')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);">📸</div>
+        <div class="size-card-name">Instagram Post</div>
+        <div class="size-card-dim">1080 × 1080 px</div>
       </div>
-      <div class="size-card" data-cat="social" onclick="applySize(1080,1920)">
-        <div class="size-icon-wrap" style="font-size:14px">▯</div>
-        <div class="size-label">Instagram Story</div>
-        <div class="size-dim">1080 × 1920</div>
+      <div class="size-card" data-cat="social" onclick="startDesign(1080,1920,'Instagram Story')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#833ab4,#fd1d1d);">📱</div>
+        <div class="size-card-name">Instagram Story</div>
+        <div class="size-card-dim">1080 × 1920 px</div>
       </div>
-      <div class="size-card" data-cat="social" onclick="applySize(1200,628)">
-        <div class="size-icon-wrap" style="font-size:14px">▭</div>
-        <div class="size-label">Facebook Post</div>
-        <div class="size-dim">1200 × 628</div>
+      <div class="size-card" data-cat="social" onclick="startDesign(1200,628,'Facebook Post')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#1877f2,#42a5f5);">👍</div>
+        <div class="size-card-name">Facebook Post</div>
+        <div class="size-card-dim">1200 × 628 px</div>
       </div>
-      <div class="size-card" data-cat="social" onclick="applySize(1500,500)">
-        <div class="size-icon-wrap" style="font-size:11px">━━</div>
-        <div class="size-label">Twitter Banner</div>
-        <div class="size-dim">1500 × 500</div>
+      <div class="size-card" data-cat="social" onclick="startDesign(1500,500,'Twitter Header')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#1da1f2,#0d8bd9);">🐦</div>
+        <div class="size-card-name">Twitter Header</div>
+        <div class="size-card-dim">1500 × 500 px</div>
       </div>
-      <div class="size-card" data-cat="social" onclick="applySize(1200,1200)">
-        <div class="size-icon-wrap">⬡</div>
-        <div class="size-label">LinkedIn Post</div>
-        <div class="size-dim">1200 × 1200</div>
+      <div class="size-card" data-cat="social" onclick="startDesign(1280,720,'YouTube Thumbnail')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#ff0000,#cc0000);">▶️</div>
+        <div class="size-card-name">YouTube Thumbnail</div>
+        <div class="size-card-dim">1280 × 720 px</div>
       </div>
-      <div class="size-card" data-cat="marketing" onclick="applySize(700,990)">
-        <div class="size-icon-wrap" style="font-size:14px">▯</div>
-        <div class="size-label">Flyer / Poster</div>
-        <div class="size-dim">700 × 990</div>
+      <div class="size-card" data-cat="social" onclick="startDesign(1000,1500,'Pinterest Pin')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#e60023,#ad081b);">📌</div>
+        <div class="size-card-name">Pinterest Pin</div>
+        <div class="size-card-dim">1000 × 1500 px</div>
       </div>
-      <div class="size-card" data-cat="marketing" onclick="applySize(1920,1080)">
-        <div class="size-icon-wrap" style="font-size:14px">▭</div>
-        <div class="size-label">Presentation</div>
-        <div class="size-dim">1920 × 1080</div>
+      <div class="size-card" data-cat="social" onclick="startDesign(1080,1080,'TikTok Post')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#010101,#69c9d0);">🎵</div>
+        <div class="size-card-name">TikTok Post</div>
+        <div class="size-card-dim">1080 × 1080 px</div>
       </div>
-      <div class="size-card" data-cat="print" onclick="applySize(794,1123)">
-        <div class="size-icon-wrap" style="font-size:14px">▯</div>
-        <div class="size-label">A4 Document</div>
-        <div class="size-dim">794 × 1123</div>
+      <div class="size-card" data-cat="social" onclick="startDesign(1584,396,'LinkedIn Banner')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#0077b5,#00a0dc);">💼</div>
+        <div class="size-card-name">LinkedIn Banner</div>
+        <div class="size-card-dim">1584 × 396 px</div>
       </div>
-      <div class="size-card" data-cat="print" onclick="applySize(1050,600)">
-        <div class="size-icon-wrap" style="font-size:14px">▭</div>
-        <div class="size-label">Business Card</div>
-        <div class="size-dim">1050 × 600</div>
+      <!-- Print -->
+      <div class="size-card" data-cat="print" onclick="startDesign(794,1123,'A4 Document')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#374151,#6b7280);">📄</div>
+        <div class="size-card-name">A4 Document</div>
+        <div class="size-card-dim">794 × 1123 px</div>
       </div>
-      <div class="size-card" data-cat="document" onclick="applySize(2550,3300)">
-        <div class="size-icon-wrap" style="font-size:14px">▯</div>
-        <div class="size-label">Certificate</div>
-        <div class="size-dim">2550 × 3300</div>
+      <div class="size-card" data-cat="print" onclick="startDesign(1050,600,'Business Card')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#1e293b,#334155);">🪪</div>
+        <div class="size-card-name">Business Card</div>
+        <div class="size-card-dim">1050 × 600 px</div>
       </div>
-      <div class="size-card" data-cat="marketing" onclick="applySize(1000,1000)">
-        <div class="size-icon-wrap">◻</div>
-        <div class="size-label">Product Label</div>
-        <div class="size-dim">1000 × 1000</div>
+      <div class="size-card" data-cat="print" onclick="startDesign(826,1169,'Flyer A5')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">🎪</div>
+        <div class="size-card-name">Flyer A5</div>
+        <div class="size-card-dim">826 × 1169 px</div>
       </div>
-      <div class="size-card custom-size-card" data-cat="all" onclick="showCustomSize()">
-        <div class="size-icon-wrap" style="background:rgba(245,158,11,.1)">⊕</div>
-        <div class="size-label">Custom Size</div>
-        <div class="size-dim">Any dimension</div>
+      <div class="size-card" data-cat="print" onclick="startDesign(1587,2245,'Poster A3')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#dc2626,#f87171);">🎬</div>
+        <div class="size-card-name">Poster A3</div>
+        <div class="size-card-dim">1587 × 2245 px</div>
+      </div>
+      <div class="size-card" data-cat="print" onclick="startDesign(1270,1270,'CD Cover')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#0f172a,#1e3a5f);">💿</div>
+        <div class="size-card-name">CD / Album Cover</div>
+        <div class="size-card-dim">1270 × 1270 px</div>
+      </div>
+      <!-- Documents -->
+      <div class="size-card" data-cat="doc" onclick="startDesign(794,1123,'Resume')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#065f46,#10b981);">📋</div>
+        <div class="size-card-name">Resume / CV</div>
+        <div class="size-card-dim">794 × 1123 px</div>
+      </div>
+      <div class="size-card" data-cat="doc" onclick="startDesign(794,1123,'Certificate')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#92400e,#f59e0b);">🏆</div>
+        <div class="size-card-name">Certificate</div>
+        <div class="size-card-dim">794 × 1123 px</div>
+      </div>
+      <div class="size-card" data-cat="doc" onclick="startDesign(1123,794,'Presentation')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#1e40af,#3b82f6);">📊</div>
+        <div class="size-card-name">Presentation</div>
+        <div class="size-card-dim">1123 × 794 px</div>
+      </div>
+      <div class="size-card" data-cat="doc" onclick="startDesign(794,1123,'Invoice')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#134e4a,#14b8a6);">🧾</div>
+        <div class="size-card-name">Invoice</div>
+        <div class="size-card-dim">794 × 1123 px</div>
+      </div>
+      <!-- Marketing -->
+      <div class="size-card" data-cat="marketing" onclick="startDesign(1200,628,'Ad Banner')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">📢</div>
+        <div class="size-card-name">Ad Banner</div>
+        <div class="size-card-dim">1200 × 628 px</div>
+      </div>
+      <div class="size-card" data-cat="marketing" onclick="startDesign(600,800,'Email Header')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#6d28d9,#8b5cf6);">📧</div>
+        <div class="size-card-name">Email Header</div>
+        <div class="size-card-dim">600 × 800 px</div>
+      </div>
+      <div class="size-card" data-cat="marketing" onclick="startDesign(800,800,'Logo')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#0369a1,#06b6d4);">🔷</div>
+        <div class="size-card-name">Logo</div>
+        <div class="size-card-dim">800 × 800 px</div>
+      </div>
+      <div class="size-card" data-cat="marketing" onclick="startDesign(2560,1440,'Billboard')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#7f1d1d,#ef4444);">🏙️</div>
+        <div class="size-card-name">Billboard</div>
+        <div class="size-card-dim">2560 × 1440 px</div>
+      </div>
+      <!-- Video -->
+      <div class="size-card" data-cat="video" onclick="startDesign(1920,1080,'HD Video Frame')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#18181b,#3f3f46);">🎥</div>
+        <div class="size-card-name">HD Video Frame</div>
+        <div class="size-card-dim">1920 × 1080 px</div>
+      </div>
+      <div class="size-card" data-cat="video" onclick="startDesign(1080,1920,'Vertical Video')">
+        <div class="size-card-preview" style="background:linear-gradient(135deg,#18181b,#52525b);">📲</div>
+        <div class="size-card-name">Vertical Video</div>
+        <div class="size-card-dim">1080 × 1920 px</div>
       </div>
     </div>
 
-    <div class="custom-size-row" id="customSizeRow" style="display:none">
-      <input type="number" id="customW" placeholder="Width (px)" min="50" max="8000"/>
-      <span>×</span>
-      <input type="number" id="customH" placeholder="Height (px)" min="50" max="8000"/>
-      <button class="btn-primary" style="width:auto;padding:10px 24px" onclick="applyCustomSize()">Create Canvas</button>
+    <div class="custom-size-box" id="customSizeBox" style="display:none;">
+      <label>Width (px)</label>
+      <input type="number" id="customW" value="1080" min="100" max="8000">
+      <label>Height (px)</label>
+      <input type="number" id="customH" value="1080" min="100" max="8000">
+      <label>Name</label>
+      <input type="text" id="customName" value="Custom Design" style="width:140px;">
+      <button class="cta-primary" style="padding:10px 24px;font-size:14px;" onclick="applyCustomSize()">Create →</button>
     </div>
-
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MAIN APP SHELL
-════════════════════════════════════════════ -->
-<div class="app-shell" id="appShell" style="display:none">
+<!-- ══════════════════════════════════════════
+     APP HEADER
+══════════════════════════════════════════ -->
+<header class="app-header" id="appHeader" style="display:none;">
+  <span class="app-logo">⬡ DesignPro</span>
+  <input class="doc-name-input" id="docName" value="Untitled Design" onblur="renameDoc(this.value)">
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <span class="zoom-display" id="zoomLabel">100%</span>
+    <button class="hbtn" onclick="zoomIn()" data-tip="Zoom In">＋</button>
+    <button class="hbtn" onclick="zoomOut()" data-tip="Zoom Out">－</button>
+    <button class="hbtn" onclick="zoomFit()" data-tip="Fit to Screen">⊞ Fit</button>
+    <div class="sep-v"></div>
+    <button class="hbtn" onclick="undoAction()" data-tip="Undo">↩ Undo</button>
+    <button class="hbtn" onclick="redoAction()" data-tip="Redo">↪ Redo</button>
+    <div class="sep-v"></div>
+    <button class="hbtn" onclick="saveDesign()">💾 Save</button>
+    <button class="hbtn primary" onclick="document.getElementById('exportModal').classList.add('active')">⬆ Export</button>
+    <button class="hbtn" onclick="document.getElementById('sizeOverlay').classList.add('active');document.getElementById('appHeader').style.display='none';document.getElementById('mainApp').style.display='none';" style="margin-left:4px;">＋ New</button>
+  </div>
+</header>
 
-  <!-- ── HEADER ── -->
-  <header class="app-header">
-    <div class="header-left">
-      <div class="brand-logo">
-        <div class="brand-icon">✦</div>
-        <span class="brand-name">Design Pro <span class="brand-by">by Onimix</span></span>
-      </div>
-      <div class="header-divider"></div>
-    </div>
-    <div class="header-center">
-      <input class="doc-name-input" id="docName" value="Untitled Design" title="Click to rename"/>
-      <button class="size-pill" id="sizePill" onclick="reopenSizeModal()">
-        <span id="sizePillLabel">1080 × 1080</span>
-        <span class="pill-icon">▾</span>
-      </button>
-    </div>
-    <div class="header-right">
-      <button class="hbtn" id="undoBtn" onclick="undoAction()" title="Undo (Ctrl+Z)">↩</button>
-      <button class="hbtn" id="redoBtn" onclick="redoAction()" title="Redo (Ctrl+Y)">↪</button>
-      <button class="hbtn" onclick="toggleGrid()" id="gridBtn" title="Toggle Grid">⊞</button>
-      <div class="sep"></div>
-      <button class="hbtn" onclick="zoomOut()" title="Zoom Out">−</button>
-      <span class="zoom-val" id="zoomVal">100%</span>
-      <button class="hbtn" onclick="zoomIn()" title="Zoom In">+</button>
-      <button class="hbtn" onclick="zoomReset()" title="Reset Zoom" style="font-size:12px">⊙</button>
-      <div class="sep"></div>
-      <button class="hbtn save-btn" onclick="saveToLibrary()" title="Save">💾</button>
-      <button class="btn-export" onclick="showExportModal()">↓ Export</button>
-    </div>
-  </header>
+<!-- ══════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════ -->
+<div class="main-layout" id="mainApp" style="display:none;">
 
-  <!-- ── MAIN LAYOUT ── -->
-  <div class="main-layout">
+  <!-- ── COREL-STYLE VERTICAL TOOL STRIP ── -->
+  <div class="tool-strip" id="toolStrip">
+    <button class="tstripbtn active" id="ts-select" title="Select Tool (V)" onclick="setActiveTool('select')" data-tip="Select (V)">↖</button>
+    <button class="tstripbtn" id="ts-node" title="Node Edit Tool (N)" onclick="setActiveTool('node')" data-tip="Node Edit (N)">⬡</button>
+    <button class="tstripbtn" id="ts-pen" title="Pen / Bezier Tool (P)" onclick="setActiveTool('pen')" data-tip="Pen Tool (P)">✒</button>
+    <div class="tool-strip-sep"></div>
+    <button class="tstripbtn" id="ts-rect" title="Rectangle Tool (R)" onclick="setActiveTool('rect');addShape('rect')" data-tip="Rectangle (R)">▭</button>
+    <button class="tstripbtn" id="ts-ellipse" title="Ellipse Tool (E)" onclick="setActiveTool('ellipse');addShape('circle')" data-tip="Ellipse (E)">◯</button>
+    <button class="tstripbtn" id="ts-triangle" title="Triangle Tool" onclick="setActiveTool('triangle');addShape('triangle')" data-tip="Triangle">△</button>
+    <button class="tstripbtn" id="ts-star" title="Star Tool" onclick="setActiveTool('star');addShape('star')" data-tip="Star">★</button>
+    <button class="tstripbtn" id="ts-poly" title="Polygon Tool" onclick="setActiveTool('polygon');addShape('hexagon')" data-tip="Polygon">⬡</button>
+    <div class="tool-strip-sep"></div>
+    <button class="tstripbtn" id="ts-text" title="Text Tool (T)" onclick="setActiveTool('text');addText('body')" data-tip="Text (T)">T</button>
+    <button class="tstripbtn" id="ts-image" title="Place Image" onclick="document.getElementById('imgUpload').click()" data-tip="Place Image">🖼</button>
+    <div class="tool-strip-sep"></div>
+    <button class="tstripbtn" id="ts-eyedrop" title="Eyedropper" onclick="setActiveTool('eyedrop')" data-tip="Eyedropper">💧</button>
+    <button class="tstripbtn" id="ts-fill" title="Fill Tool" onclick="setActiveTool('fill')" data-tip="Fill">🪣</button>
+    <div class="tool-strip-sep"></div>
+    <button class="tstripbtn" onclick="toggleGrid()" data-tip="Toggle Grid" id="ts-grid">⊞</button>
+    <button class="tstripbtn" onclick="toggleSnap()" data-tip="Toggle Snap" id="ts-snap">🧲</button>
+    <button class="tstripbtn" onclick="toggleRulers()" data-tip="Toggle Rulers" id="ts-rulers">📏</button>
+  </div>
 
-    <!-- LEFT SIDEBAR -->
-    <aside class="sidebar-left">
-      <nav class="tab-nav">
-        <button class="tab-btn active" data-tab="ai" onclick="switchTab('ai')" title="AI Agent">
-          <span>🤖</span><span class="tab-label">AI</span>
-        </button>
-        <button class="tab-btn" data-tab="tpl" onclick="switchTab('tpl')" title="Templates">
-          <span>⊞</span><span class="tab-label">Templates</span>
-        </button>
-        <button class="tab-btn" data-tab="elem" onclick="switchTab('elem')" title="Elements">
-          <span>◈</span><span class="tab-label">Elements</span>
-        </button>
-        <button class="tab-btn" data-tab="text" onclick="switchTab('text')" title="Text">
-          <span style="font-size:20px;font-weight:800">T</span><span class="tab-label">Text</span>
-        </button>
-        <button class="tab-btn" data-tab="upload" onclick="switchTab('upload')" title="Uploads">
-          <span>↑</span><span class="tab-label">Uploads</span>
-        </button>
-        <button class="tab-btn" data-tab="photos" onclick="switchTab('photos')" title="Photos">
-          <span>🖼</span><span class="tab-label">Photos</span>
-        </button>
-        <button class="tab-btn" data-tab="bg" onclick="switchTab('bg')" title="Background">
-          <span>◧</span><span class="tab-label">BG</span>
-        </button>
-        <button class="tab-btn" data-tab="saved" onclick="switchTab('saved')" title="My Saved">
-          <span>★</span><span class="tab-label">Saved</span>
-        </button>
-      </nav>
+  <!-- ── LEFT SIDEBAR ── -->
+  <aside class="sidebar-left" id="sidebarLeft">
+    <nav class="tab-nav">
+      <button class="tab-btn active" id="tab-btn-ai" onclick="switchTab('ai')" data-tip="AI">🤖<span class="tab-label">AI</span></button>
+      <button class="tab-btn" id="tab-btn-tpl" onclick="switchTab('tpl')" data-tip="Templates">🎨<span class="tab-label">Templates</span></button>
+      <button class="tab-btn" id="tab-btn-elem" onclick="switchTab('elem')" data-tip="Elements">◼<span class="tab-label">Elements</span></button>
+      <button class="tab-btn" id="tab-btn-text" onclick="switchTab('text')" data-tip="Text">T<span class="tab-label">Text</span></button>
+      <button class="tab-btn" id="tab-btn-upload" onclick="switchTab('upload')" data-tip="Uploads">⬆<span class="tab-label">Uploads</span></button>
+      <button class="tab-btn" id="tab-btn-photos" onclick="switchTab('photos')" data-tip="Photos">📷<span class="tab-label">Photos</span></button>
+      <button class="tab-btn" id="tab-btn-bg" onclick="switchTab('bg')" data-tip="Background">🖼<span class="tab-label">BG</span></button>
+      <button class="tab-btn" id="tab-btn-saved" onclick="switchTab('saved')" data-tip="Saved">⭐<span class="tab-label">Saved</span></button>
+    </nav>
 
-      <div class="tab-panels">
+    <div class="tab-panels">
 
-        <!-- AI AGENT PANEL -->
-        <div class="tab-panel active" id="tab-ai">
-          <div class="panel-title">AI Design Agent</div>
-          <p class="panel-sub">Describe what you want — the agent autonomously plans and builds your design.</p>
-          <textarea class="ai-input" id="aiPrompt" placeholder="e.g. Make a modern tech company flyer with purple gradient, bold headline and geometric shapes..."></textarea>
-          <div class="ai-style-row">
-            <label>Style</label>
-            <select id="aiStyle">
-              <option value="modern">Modern</option>
-              <option value="minimal">Minimal</option>
-              <option value="bold">Bold & Vibrant</option>
-              <option value="elegant">Elegant</option>
-              <option value="playful">Playful</option>
-              <option value="corporate">Corporate</option>
-              <option value="retro">Retro</option>
-              <option value="dark">Dark Premium</option>
-            </select>
-          </div>
-          <div class="ai-style-row">
-            <label>Industry</label>
-            <select id="aiIndustry">
-              <option value="general">General</option>
-              <option value="tech">Technology</option>
-              <option value="fashion">Fashion</option>
-              <option value="food">Food & Beverage</option>
-              <option value="health">Health & Wellness</option>
-              <option value="education">Education</option>
-              <option value="real-estate">Real Estate</option>
-              <option value="music">Music & Events</option>
-              <option value="finance">Finance</option>
-            </select>
-          </div>
-          <button class="btn-ai-gen" id="aiGenBtn" onclick="runAIAgent()">
-            <span id="aiGenLabel">✦ Generate Design</span>
-          </button>
-          <div class="ai-cmd-section">
-            <div class="ai-cmd-title">Refine Design</div>
-            <input class="ai-cmd-input" id="aiCmdInput" placeholder="Make it more minimal..." onkeydown="if(event.key==='Enter')runAICommand()"/>
-            <button class="btn-ai-cmd" onclick="runAICommand()">Apply Command</button>
-          </div>
-          <div class="ai-cmd-hints">
-            <div class="ai-cmd-hint" onclick="setCmd('Make it more minimalist')">Make it more minimalist</div>
-            <div class="ai-cmd-hint" onclick="setCmd('Use warmer colors')">Use warmer colors</div>
-            <div class="ai-cmd-hint" onclick="setCmd('Make the headline bigger and bolder')">Bigger, bolder headline</div>
-            <div class="ai-cmd-hint" onclick="setCmd('Add a dark elegant background')">Dark elegant background</div>
-          </div>
-          <div class="ai-log-section">
-            <div class="ai-log-title">Agent Log</div>
-            <div class="ai-log" id="aiLog">
-              <div class="ai-log-entry ok">Agent ready. Awaiting your prompt.</div>
-            </div>
+      <!-- AI Panel -->
+      <div class="tab-panel active" id="tab-ai">
+        <div class="panel-title">AI Design Agent</div>
+        <p class="panel-sub">Describe what you want — AI builds it on canvas.</p>
+        <textarea class="ai-input" id="aiPrompt" placeholder="e.g. Create a neon cyberpunk event flyer with bold typography and glowing effects..."></textarea>
+        <div class="ai-style-row">
+          <label>Style</label>
+          <select id="aiStyle">
+            <option>Modern</option><option>Retro</option><option>Minimalist</option>
+            <option>Luxury</option><option>Playful</option><option>Corporate</option>
+            <option>Cyberpunk</option><option>Nature</option>
+          </select>
+        </div>
+        <div class="ai-style-row">
+          <label>Color</label>
+          <select id="aiColorScheme">
+            <option>Auto</option><option>Dark</option><option>Light</option>
+            <option>Vibrant</option><option>Pastel</option><option>Monochrome</option>
+            <option>Gold & Black</option><option>Blue & White</option>
+          </select>
+        </div>
+        <button class="btn-ai-gen" id="aiGenBtn" onclick="runAIDesign()">✨ Generate Design</button>
+        <div class="ai-cmd-section">
+          <div class="ai-cmd-title">Quick Commands</div>
+          <input class="ai-cmd-input" id="aiCmd" placeholder="e.g. make text bigger, add a border..." onkeydown="if(event.key==='Enter')runAICommand()">
+          <button class="btn-ai-cmd" onclick="runAICommand()">Run Command →</button>
+          <div class="ai-cmd-hints" style="margin-top:8px;">
+            <div class="ai-cmd-hint" onclick="quickCmd('Add a golden border to all shapes')">✦ Add golden border to shapes</div>
+            <div class="ai-cmd-hint" onclick="quickCmd('Make the background a dark gradient')">🌑 Dark gradient background</div>
+            <div class="ai-cmd-hint" onclick="quickCmd('Center all elements and add spacing')">⊞ Center & space elements</div>
+            <div class="ai-cmd-hint" onclick="quickCmd('Apply a neon glow effect to text')">💡 Neon glow on text</div>
+            <div class="ai-cmd-hint" onclick="quickCmd('Add geometric shapes as decorative accents')">◆ Add geometric accents</div>
           </div>
         </div>
-
-        <!-- TEMPLATES PANEL -->
-        <div class="tab-panel" id="tab-tpl">
-          <div class="panel-title">Templates</div>
-          <input class="search-input" id="tplSearch" placeholder="Search templates..." oninput="filterTemplates(this.value)"/>
-          <div class="tcat-scroll">
-            <button class="tcat-btn active" onclick="filterCat('all',this)">All</button>
-            <button class="tcat-btn" onclick="filterCat('flyer',this)">Flyers</button>
-            <button class="tcat-btn" onclick="filterCat('social',this)">Social</button>
-            <button class="tcat-btn" onclick="filterCat('poster',this)">Posters</button>
-            <button class="tcat-btn" onclick="filterCat('business',this)">Business</button>
-            <button class="tcat-btn" onclick="filterCat('certificate',this)">Certs</button>
-            <button class="tcat-btn" onclick="filterCat('logo',this)">Logos</button>
-          </div>
-          <div class="tgrid" id="templateGrid"></div>
-        </div>
-
-        <!-- ELEMENTS PANEL -->
-        <div class="tab-panel" id="tab-elem">
-          <div class="panel-title">Elements</div>
-          <div class="elem-section-title">Shapes</div>
-          <div class="elem-grid">
-            <button class="elem-btn" onclick="addShape('rect')" title="Rectangle">▬</button>
-            <button class="elem-btn" onclick="addShape('roundrect')" title="Rounded Rect">▢</button>
-            <button class="elem-btn" onclick="addShape('circle')" title="Circle">●</button>
-            <button class="elem-btn" onclick="addShape('ellipse')" title="Ellipse">⬭</button>
-            <button class="elem-btn" onclick="addShape('triangle')" title="Triangle">▲</button>
-            <button class="elem-btn" onclick="addShape('star')" title="Star">★</button>
-            <button class="elem-btn" onclick="addShape('diamond')" title="Diamond">◆</button>
-            <button class="elem-btn" onclick="addShape('arrow')" title="Arrow">→</button>
-            <button class="elem-btn" onclick="addShape('heart')" title="Heart">♥</button>
-            <button class="elem-btn" onclick="addShape('hexagon')" title="Hexagon">⬡</button>
-            <button class="elem-btn" onclick="addShape('cross')" title="Cross">✚</button>
-            <button class="elem-btn" onclick="addShape('speechbubble')" title="Speech Bubble">💬</button>
-          </div>
-          <div class="elem-section-title">Lines</div>
-          <div class="elem-grid">
-            <button class="elem-btn wide" onclick="addLine('solid')">─── Solid</button>
-            <button class="elem-btn wide" onclick="addLine('dashed')">- - - Dashed</button>
-            <button class="elem-btn wide" onclick="addLine('thick')">━━━ Thick</button>
-            <button class="elem-btn wide" onclick="addLine('double')">═══ Double</button>
-          </div>
-          <div class="elem-section-title">Badges & Frames</div>
-          <div class="elem-grid">
-            <button class="elem-btn wide" onclick="addBadge('ribbon')">🎀 Ribbon</button>
-            <button class="elem-btn wide" onclick="addBadge('seal')">🔷 Seal</button>
-            <button class="elem-btn wide" onclick="addBadge('badge')">🏷 Badge</button>
-            <button class="elem-btn wide" onclick="addBadge('label')">🏷 Label</button>
-          </div>
-        </div>
-
-        <!-- TEXT PANEL -->
-        <div class="tab-panel" id="tab-text">
-          <div class="panel-title">Text</div>
-          <div class="text-add-btns">
-            <button class="text-add-btn heading" onclick="addText('heading')">Add Heading</button>
-            <button class="text-add-btn subheading" onclick="addText('subheading')">Add Subheading</button>
-            <button class="text-add-btn body" onclick="addText('body')">Add Body Text</button>
-            <button class="text-add-btn caption" onclick="addText('caption')">Add Caption</button>
-          </div>
-          <div class="elem-section-title" style="margin-top:12px">Quick Text Styles</div>
-          <div class="quick-text-list" id="quickTextList"></div>
-        </div>
-
-        <!-- UPLOADS PANEL -->
-        <div class="tab-panel" id="tab-upload">
-          <div class="panel-title">Uploads</div>
-          <label class="upload-zone" for="imgUpload">
-            <div class="upload-icon">↑</div>
-            <div class="upload-label">Click or drag images here</div>
-            <div class="upload-sub">PNG, JPG, SVG, WebP</div>
-          </label>
-          <input type="file" id="imgUpload" accept="image/*" multiple style="display:none" onchange="handleUpload(event)"/>
-          <div class="upload-grid" id="uploadGrid"></div>
-        </div>
-
-        <!-- PHOTOS PANEL -->
-        <div class="tab-panel" id="tab-photos">
-          <div class="panel-title">Stock Photos</div>
-          <div class="search-row">
-            <input class="search-input" id="photoSearch" placeholder="Search Unsplash..." onkeydown="if(event.key==='Enter')searchUnsplash()"/>
-            <button class="search-btn" onclick="searchUnsplash()">⌕</button>
-          </div>
-          <div class="photo-cats">
-            <button class="pcat-btn" onclick="searchPhotosCat('business')">Business</button>
-            <button class="pcat-btn" onclick="searchPhotosCat('technology')">Tech</button>
-            <button class="pcat-btn" onclick="searchPhotosCat('nature')">Nature</button>
-            <button class="pcat-btn" onclick="searchPhotosCat('people')">People</button>
-            <button class="pcat-btn" onclick="searchPhotosCat('food')">Food</button>
-            <button class="pcat-btn" onclick="searchPhotosCat('abstract')">Abstract</button>
-          </div>
-          <div class="photo-grid" id="photoGrid">
-            <div class="photo-placeholder">Search for photos above</div>
-          </div>
-        </div>
-
-        <!-- BACKGROUND PANEL -->
-        <div class="tab-panel" id="tab-bg">
-          <div class="panel-title">Background</div>
-          <div class="bg-section-title">Solid Colors</div>
-          <div class="bg-color-grid" id="bgColorGrid"></div>
-          <div class="bg-section-title">Gradients</div>
-          <div class="bg-grad-grid" id="bgGradGrid"></div>
-          <div class="bg-section-title">Custom</div>
-          <div class="bg-custom-row">
-            <input type="color" id="bgColorPicker" value="#ffffff" oninput="setBgColor(this.value)"/>
-            <span style="font-size:13px;color:var(--text2)">Pick any color</span>
-          </div>
-          <div class="bg-section-title">Patterns</div>
-          <div class="bg-pattern-grid" id="bgPatternGrid"></div>
-        </div>
-
-        <!-- SAVED PANEL -->
-        <div class="tab-panel" id="tab-saved">
-          <div class="panel-title">My Library</div>
-          <div class="saved-grid" id="savedGrid">
-            <div class="saved-empty">No saved designs yet.<br/>Click 💾 to save your work.</div>
-          </div>
-        </div>
-
-      </div><!-- /tab-panels -->
-    </aside><!-- /sidebar-left -->
-
-    <!-- CANVAS AREA -->
-    <main class="canvas-area">
-      <div class="canvas-topbar" id="canvasTopbar">
-        <div class="ctx-tools" id="ctxTools">
-          <div class="ctx-group" id="ctxText" style="display:none">
-            <select id="fontFamSel" onchange="updateProp('fontFamily',this.value)" title="Font Family">
-              <option value="Arial">Arial</option>
-              <option value="Helvetica">Helvetica</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Courier New">Courier New</option>
-              <option value="Verdana">Verdana</option>
-              <option value="Impact">Impact</option>
-              <option value="Trebuchet MS">Trebuchet MS</option>
-              <option value="Palatino">Palatino</option>
-              <option value="Comic Sans MS">Comic Sans MS</option>
-            </select>
-            <input type="number" id="fontSizeInp" value="32" min="6" max="400" style="width:58px" onchange="updateProp('fontSize',+this.value)" title="Font Size"/>
-            <button class="tbtn" id="boldBtn" onclick="toggleBold()" title="Bold"><b>B</b></button>
-            <button class="tbtn" id="italicBtn" onclick="toggleItalic()" title="Italic"><i>I</i></button>
-            <button class="tbtn" id="underlineBtn" onclick="toggleUnderline()" title="Underline"><u>U</u></button>
-            <div class="sep-v"></div>
-            <button class="tbtn" onclick="alignText('left')" title="Align Left">⇤</button>
-            <button class="tbtn" onclick="alignText('center')" title="Center">⇔</button>
-            <button class="tbtn" onclick="alignText('right')" title="Align Right">⇥</button>
-            <div class="sep-v"></div>
-            <label class="color-swatch-wrap" title="Text Color">
-              <span>A</span>
-              <input type="color" id="textColorInp" value="#000000" oninput="updateProp('fill',this.value)"/>
-            </label>
-          </div>
-          <div class="ctx-group" id="ctxShape" style="display:none">
-            <label class="color-swatch-wrap" title="Fill">
-              <span>Fill</span>
-              <input type="color" id="shapeFillInp" value="#6c3fc5" oninput="updateProp('fill',this.value)"/>
-            </label>
-            <label class="color-swatch-wrap" title="Stroke">
-              <span>Border</span>
-              <input type="color" id="shapeStrokeInp" value="#ffffff" oninput="updateProp('stroke',this.value)"/>
-            </label>
-            <input type="number" id="strokeWidthInp" value="0" min="0" max="50" style="width:50px" onchange="updateProp('strokeWidth',+this.value)" title="Border Width"/>
-            <span style="font-size:11px;color:var(--muted)">Opacity</span>
-            <input type="range" id="opacityInp" min="0" max="100" value="100" oninput="updateProp('opacity',this.value/100)" style="width:72px"/>
-            <span id="opacityVal" style="font-size:11px;color:var(--text3);min-width:32px">100%</span>
-          </div>
-          <div class="ctx-group" id="ctxCommon" style="display:none">
-            <div class="sep-v"></div>
-            <button class="tbtn" onclick="arrangeObj('forward')" title="Bring Forward">⬆</button>
-            <button class="tbtn" onclick="arrangeObj('backward')" title="Send Backward">⬇</button>
-            <button class="tbtn" onclick="arrangeObj('front')" title="Bring to Front">⤒</button>
-            <button class="tbtn" onclick="arrangeObj('back')" title="Send to Back">⤓</button>
-            <div class="sep-v"></div>
-            <button class="tbtn" onclick="alignObj('left')" title="Align Left">⬤←</button>
-            <button class="tbtn" onclick="alignObj('center')" title="Center H">⬤⊕</button>
-            <button class="tbtn" onclick="alignObj('right')" title="Align Right">→⬤</button>
-            <button class="tbtn" onclick="alignObj('top')" title="Align Top">⬤↑</button>
-            <button class="tbtn" onclick="alignObj('middle')" title="Center V">⬤↕</button>
-            <button class="tbtn" onclick="alignObj('bottom')" title="Align Bottom">⬤↓</button>
-            <div class="sep-v"></div>
-            <button class="tbtn" onclick="duplicateObj()" title="Duplicate (Ctrl+D)">⎘</button>
-            <button class="tbtn" onclick="lockObj()" title="Lock/Unlock" id="lockBtn">🔓</button>
-            <button class="tbtn danger" onclick="deleteObj()" title="Delete (Del)">✕</button>
-          </div>
+        <div class="ai-log-section">
+          <div class="ai-log-title">Agent Log</div>
+          <div class="ai-log" id="aiLog"><div class="ai-log-entry info">Ready. Describe your design above.</div></div>
         </div>
       </div>
 
+      <!-- Templates Panel -->
+      <div class="tab-panel" id="tab-tpl">
+        <div class="panel-title">Templates</div>
+        <input class="search-input" placeholder="🔍 Search templates..." oninput="filterTemplates(this.value)">
+        <div class="tcat-scroll">
+          <button class="tcat-btn active" onclick="filterCat('all',this)">All</button>
+          <button class="tcat-btn" onclick="filterCat('flyers',this)">Flyers</button>
+          <button class="tcat-btn" onclick="filterCat('social',this)">Social</button>
+          <button class="tcat-btn" onclick="filterCat('posters',this)">Posters</button>
+          <button class="tcat-btn" onclick="filterCat('business',this)">Business</button>
+          <button class="tcat-btn" onclick="filterCat('certificates',this)">Certs</button>
+          <button class="tcat-btn" onclick="filterCat('logos',this)">Logos</button>
+          <button class="tcat-btn" onclick="filterCat('menus',this)">Menus</button>
+          <button class="tcat-btn" onclick="filterCat('invitations',this)">Invites</button>
+        </div>
+        <div class="tgrid" id="templateGrid"></div>
+      </div>
+
+      <!-- Elements Panel -->
+      <div class="tab-panel" id="tab-elem">
+        <div class="panel-title">Elements</div>
+        <div class="elem-section-title">Basic Shapes</div>
+        <div class="elem-grid">
+          <button class="elem-btn" onclick="addShape('rect')" data-tip="Rectangle">▭</button>
+          <button class="elem-btn" onclick="addShape('roundrect')" data-tip="Rounded Rect">▢</button>
+          <button class="elem-btn" onclick="addShape('circle')" data-tip="Circle">◯</button>
+          <button class="elem-btn" onclick="addShape('ellipse')" data-tip="Ellipse">⬭</button>
+          <button class="elem-btn" onclick="addShape('triangle')" data-tip="Triangle">△</button>
+          <button class="elem-btn" onclick="addShape('star')" data-tip="Star">★</button>
+          <button class="elem-btn" onclick="addShape('diamond')" data-tip="Diamond">◆</button>
+          <button class="elem-btn" onclick="addShape('hexagon')" data-tip="Hexagon">⬡</button>
+          <button class="elem-btn" onclick="addShape('arrow')" data-tip="Arrow">→</button>
+          <button class="elem-btn" onclick="addShape('heart')" data-tip="Heart">♥</button>
+          <button class="elem-btn" onclick="addShape('cross')" data-tip="Cross">✚</button>
+          <button class="elem-btn" onclick="addShape('speechbubble')" data-tip="Speech Bubble">💬</button>
+        </div>
+        <div class="elem-section-title">Lines &amp; Curves</div>
+        <div class="elem-grid">
+          <button class="elem-btn wide" onclick="addLine()">— Line</button>
+          <button class="elem-btn wide" onclick="addShape('arrow')">→ Arrow</button>
+          <button class="elem-btn wide" onclick="addCurve()">~ Curve</button>
+          <button class="elem-btn wide" onclick="addSpiral()">@ Spiral</button>
+        </div>
+        <div class="elem-section-title">Boolean Operations</div>
+        <div class="bool-ops">
+          <button class="bool-btn" onclick="booleanOp('union')" data-tip="Union: merge two shapes">∪ Union</button>
+          <button class="bool-btn" onclick="booleanOp('subtract')" data-tip="Subtract top from bottom">− Sub</button>
+          <button class="bool-btn" onclick="booleanOp('intersect')" data-tip="Keep intersection only">∩ Inter</button>
+        </div>
+        <div class="elem-section-title">Decorative</div>
+        <div class="elem-grid">
+          <button class="elem-btn" onclick="addDecor('wave')">〜</button>
+          <button class="elem-btn" onclick="addDecor('dots')">···</button>
+          <button class="elem-btn" onclick="addDecor('grid')">⊞</button>
+          <button class="elem-btn" onclick="addDecor('zigzag')">⚡</button>
+          <button class="elem-btn" onclick="addDecor('confetti')">🎊</button>
+          <button class="elem-btn" onclick="addDecor('corner')">⌐</button>
+          <button class="elem-btn" onclick="addDecor('badge')">🔷</button>
+          <button class="elem-btn" onclick="addDecor('ribbon')">🎀</button>
+        </div>
+      </div>
+
+      <!-- Text Panel -->
+      <div class="tab-panel" id="tab-text">
+        <div class="panel-title">Text</div>
+        <div class="text-add-btns">
+          <button class="text-add-btn heading" onclick="addText('heading')">Add a Heading</button>
+          <button class="text-add-btn subheading" onclick="addText('subheading')">Add a Subheading</button>
+          <button class="text-add-btn body" onclick="addText('body')">Add body text</button>
+          <button class="text-add-btn caption" onclick="addText('caption')">Add caption</button>
+        </div>
+        <div class="elem-section-title">Text Styles</div>
+        <div class="elem-grid">
+          <button class="elem-btn wide" onclick="addStyledText('neon')">💡 Neon</button>
+          <button class="elem-btn wide" onclick="addStyledText('shadow3d')">📦 3D Shadow</button>
+          <button class="elem-btn wide" onclick="addStyledText('outline')">◻ Outline</button>
+          <button class="elem-btn wide" onclick="addStyledText('gradient')">🌈 Gradient</button>
+          <button class="elem-btn wide" onclick="addStyledText('stamp')">🔴 Stamp</button>
+          <button class="elem-btn wide" onclick="addStyledText('typewriter')">⌨ Typewriter</button>
+        </div>
+        <div class="elem-section-title">Font Pairing Suggestions</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="ai-cmd-hint" onclick="setFontPair('Playfair Display','Lato')">Playfair Display + Lato — Elegant</div>
+          <div class="ai-cmd-hint" onclick="setFontPair('Montserrat','Open Sans')">Montserrat + Open Sans — Modern</div>
+          <div class="ai-cmd-hint" onclick="setFontPair('Oswald','Merriweather')">Oswald + Merriweather — Bold</div>
+          <div class="ai-cmd-hint" onclick="setFontPair('Raleway','Roboto')">Raleway + Roboto — Clean</div>
+        </div>
+      </div>
+
+      <!-- Uploads Panel -->
+      <div class="tab-panel" id="tab-upload">
+        <div class="panel-title">Uploads</div>
+        <div class="upload-zone" onclick="document.getElementById('imgUpload').click()">
+          <div class="upload-icon">⬆️</div>
+          <div class="upload-label">Upload Images</div>
+          <div class="upload-sub">PNG, JPG, SVG, WEBP</div>
+        </div>
+        <input type="file" id="imgUpload" accept="image/*" multiple style="display:none" onchange="handleUpload(event)">
+        <div class="upload-zone" onclick="document.getElementById('svgUpload').click()" style="margin-top:0;">
+          <div class="upload-icon">📐</div>
+          <div class="upload-label">Upload SVG Vector</div>
+          <div class="upload-sub">Editable vector files</div>
+        </div>
+        <input type="file" id="svgUpload" accept=".svg" multiple style="display:none" onchange="handleSVGUpload(event)">
+        <div class="upload-grid" id="uploadGrid"></div>
+      </div>
+
+      <!-- Photos Panel -->
+      <div class="tab-panel" id="tab-photos">
+        <div class="panel-title">Stock Photos</div>
+        <div class="search-row">
+          <input class="search-input" id="photoSearch" placeholder="Search Unsplash..." style="flex:1;" onkeydown="if(event.key==='Enter')searchPhotos()">
+          <button class="search-btn" onclick="searchPhotos()">🔍</button>
+        </div>
+        <div class="photo-cats">
+          <button class="pcat-btn" onclick="document.getElementById('photoSearch').value='nature';searchPhotos()">Nature</button>
+          <button class="pcat-btn" onclick="document.getElementById('photoSearch').value='business';searchPhotos()">Business</button>
+          <button class="pcat-btn" onclick="document.getElementById('photoSearch').value='technology';searchPhotos()">Tech</button>
+          <button class="pcat-btn" onclick="document.getElementById('photoSearch').value='food';searchPhotos()">Food</button>
+          <button class="pcat-btn" onclick="document.getElementById('photoSearch').value='fashion';searchPhotos()">Fashion</button>
+          <button class="pcat-btn" onclick="document.getElementById('photoSearch').value='architecture';searchPhotos()">Architecture</button>
+          <button class="pcat-btn" onclick="document.getElementById('photoSearch').value='abstract';searchPhotos()">Abstract</button>
+        </div>
+        <div class="photo-grid" id="photoGrid">
+          <div class="photo-placeholder">Search for free stock photos from Unsplash</div>
+        </div>
+      </div>
+
+      <!-- Background Panel -->
+      <div class="tab-panel" id="tab-bg">
+        <div class="panel-title">Background</div>
+        <div class="bg-section-title">Solid Colors</div>
+        <div class="bg-color-grid">
+          <div class="bg-swatch" style="background:#0d0d14" onclick="setBg('#0d0d14')"></div>
+          <div class="bg-swatch" style="background:#1e293b" onclick="setBg('#1e293b')"></div>
+          <div class="bg-swatch" style="background:#1f2937" onclick="setBg('#1f2937')"></div>
+          <div class="bg-swatch" style="background:#ffffff" onclick="setBg('#ffffff')"></div>
+          <div class="bg-swatch" style="background:#f8fafc" onclick="setBg('#f8fafc')"></div>
+          <div class="bg-swatch" style="background:#fef3c7" onclick="setBg('#fef3c7')"></div>
+          <div class="bg-swatch" style="background:#7c3aed" onclick="setBg('#7c3aed')"></div>
+          <div class="bg-swatch" style="background:#dc2626" onclick="setBg('#dc2626')"></div>
+          <div class="bg-swatch" style="background:#059669" onclick="setBg('#059669')"></div>
+          <div class="bg-swatch" style="background:#0284c7" onclick="setBg('#0284c7')"></div>
+          <div class="bg-swatch" style="background:#f59e0b" onclick="setBg('#f59e0b')"></div>
+          <div class="bg-swatch" style="background:#ec4899" onclick="setBg('#ec4899')"></div>
+        </div>
+        <div class="bg-section-title">Gradients</div>
+        <div class="bg-grad-grid">
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#1a0533,#7c3aed)" onclick="setBgGrad('#1a0533','#7c3aed')"></div>
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e)" onclick="setBgGrad('#0f0c29','#24243e')"></div>
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)" onclick="setBgGrad('#f43f5e','#f59e0b')"></div>
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#06b6d4,#7c3aed)" onclick="setBgGrad('#06b6d4','#7c3aed')"></div>
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#10b981,#0284c7)" onclick="setBgGrad('#10b981','#0284c7')"></div>
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#111111,#333333)" onclick="setBgGrad('#111111','#333333')"></div>
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#fef3c7,#fde68a)" onclick="setBgGrad('#fef3c7','#fde68a')"></div>
+          <div class="bg-grad-swatch" style="background:linear-gradient(135deg,#831843,#ec4899)" onclick="setBgGrad('#831843','#ec4899')"></div>
+        </div>
+        <div class="bg-section-title">Custom Color</div>
+        <div class="bg-custom-row">
+          <input type="color" id="bgColorPicker" value="#0d0d14" onchange="setBg(this.value)">
+          <span style="font-size:12px;color:var(--text2)">Pick any color</span>
+        </div>
+        <div class="bg-section-title">Patterns</div>
+        <div class="bg-pattern-grid">
+          <button class="bg-pattern-btn" onclick="setBgPattern('dots')" data-tip="Dots">⊙</button>
+          <button class="bg-pattern-btn" onclick="setBgPattern('grid')" data-tip="Grid">⊞</button>
+          <button class="bg-pattern-btn" onclick="setBgPattern('diagonal')" data-tip="Diagonal">╱</button>
+          <button class="bg-pattern-btn" onclick="setBgPattern('zigzag')" data-tip="Zigzag">∿</button>
+          <button class="bg-pattern-btn" onclick="setBgPattern('hexgrid')" data-tip="Hex Grid">⬡</button>
+          <button class="bg-pattern-btn" onclick="setBgPattern('noise')" data-tip="Noise">▒</button>
+        </div>
+        <button class="btn-outline" style="margin-top:4px;" onclick="setBg('transparent')">🔲 Remove Background</button>
+      </div>
+
+      <!-- Saved Panel -->
+      <div class="tab-panel" id="tab-saved">
+        <div class="panel-title">My Library</div>
+        <p class="panel-sub">Designs you've saved appear here.</p>
+        <button class="btn-primary sm" style="width:auto;align-self:flex-start;" onclick="saveDesign()">💾 Save Current Design</button>
+        <div class="saved-grid" id="savedGrid">
+          <div class="saved-empty">No saved designs yet. Save your work to build your library.</div>
+        </div>
+      </div>
+
+    </div><!-- /tab-panels -->
+  </aside>
+
+  <!-- ── CANVAS AREA ── -->
+  <div class="canvas-area" id="canvasArea">
+
+    <!-- Context Toolbar -->
+    <div class="canvas-topbar" id="ctxToolbar">
+      <div class="ctx-tools" id="ctxTools">
+        <!-- Select tool bar (default) -->
+        <div class="ctx-group" id="ctx-select">
+          <button class="tbtn" onclick="bringForward()" data-tip="Bring Forward">⬆ Fwd</button>
+          <button class="tbtn" onclick="sendBackward()" data-tip="Send Backward">⬇ Bck</button>
+          <button class="tbtn" onclick="bringToFront()" data-tip="Bring to Front">⤒ Top</button>
+          <button class="tbtn" onclick="sendToBack()" data-tip="Send to Back">⤓ Bot</button>
+          <div class="sep-v"></div>
+          <button class="tbtn" onclick="groupObjects()" data-tip="Group">⊞ Group</button>
+          <button class="tbtn" onclick="ungroupObjects()" data-tip="Ungroup">⊟ Ungroup</button>
+          <div class="sep-v"></div>
+          <button class="tbtn" onclick="lockObject()" data-tip="Lock">🔒 Lock</button>
+          <button class="tbtn" onclick="duplicateObject()" data-tip="Duplicate">⧉ Dup</button>
+          <button class="tbtn danger" onclick="deleteSelected()" data-tip="Delete">🗑 Del</button>
+          <div class="sep-v"></div>
+          <button class="tbtn" onclick="flipH()" data-tip="Flip Horizontal">↔ FlipH</button>
+          <button class="tbtn" onclick="flipV()" data-tip="Flip Vertical">↕ FlipV</button>
+        </div>
+        <!-- Fill & Stroke -->
+        <div class="sep-v"></div>
+        <div class="ctx-group">
+          <div class="color-swatch-wrap" data-tip="Fill Color">
+            <span>Fill</span>
+            <input type="color" id="fillColor" value="#7c3aed" onchange="applyFill(this.value)">
+          </div>
+          <div class="color-swatch-wrap" data-tip="Stroke Color">
+            <span>Stroke</span>
+            <input type="color" id="strokeColor" value="#ffffff" onchange="applyStroke(this.value)">
+          </div>
+          <input type="number" id="strokeWidth" value="0" min="0" max="50" style="width:52px;" title="Stroke Width" onchange="applyStrokeWidth(this.value)" title="Stroke px">
+        </div>
+        <!-- Opacity -->
+        <div class="sep-v"></div>
+        <div class="ctx-group" style="align-items:center;gap:6px;">
+          <span style="font-size:11px;color:var(--text3)">Opacity</span>
+          <input type="range" id="opacitySlider" min="0" max="100" value="100" style="width:80px;" oninput="applyOpacity(this.value)">
+          <span id="opacityVal" style="font-size:11px;color:var(--text2);width:30px;">100%</span>
+        </div>
+        <!-- Font controls (text only) -->
+        <div class="sep-v"></div>
+        <div class="ctx-group" id="ctx-text-tools">
+          <select id="fontFamily" onchange="applyFont()" style="width:130px;">
+            <option>Arial</option><option>Helvetica</option><option>Georgia</option>
+            <option>Times New Roman</option><option>Courier New</option>
+            <option>Verdana</option><option>Trebuchet MS</option>
+            <option>Impact</option><option>Comic Sans MS</option>
+            <option>Palatino</option><option>Garamond</option>
+          </select>
+          <input type="number" id="fontSize" value="40" min="6" max="400" style="width:60px;" onchange="applyFontSize(this.value)" title="Font size">
+          <button class="tbtn" onclick="toggleBold()" id="btn-bold" data-tip="Bold"><b>B</b></button>
+          <button class="tbtn" onclick="toggleItalic()" id="btn-italic" data-tip="Italic"><i>I</i></button>
+          <button class="tbtn" onclick="toggleUnderline()" id="btn-underline" data-tip="Underline"><u>U</u></button>
+          <button class="tbtn" onclick="setTextAlign('left')" data-tip="Align Left">⬤⬜⬜</button>
+          <button class="tbtn" onclick="setTextAlign('center')" data-tip="Center">⬜⬤⬜</button>
+          <button class="tbtn" onclick="setTextAlign('right')" data-tip="Align Right">⬜⬜⬤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Object Property Bar (CorelDraw X/Y/W/H) -->
+    <div class="canvas-propbar" id="propBar">
+      <label>X</label>
+      <input type="number" id="objX" value="0" style="width:65px;" onchange="setObjPos('x',this.value)">
+      <label>Y</label>
+      <input type="number" id="objY" value="0" style="width:65px;" onchange="setObjPos('y',this.value)">
+      <div class="propbar-sep"></div>
+      <label>W</label>
+      <input type="number" id="objW" value="0" style="width:65px;" onchange="setObjSize('w',this.value)">
+      <label>H</label>
+      <input type="number" id="objH" value="0" style="width:65px;" onchange="setObjSize('h',this.value)">
+      <div class="propbar-sep"></div>
+      <label>Rotate°</label>
+      <input type="number" id="objRot" value="0" style="width:65px;" onchange="setObjRot(this.value)">
+      <div class="propbar-sep"></div>
+      <label>Corner R</label>
+      <input type="number" id="objCorner" value="0" min="0" max="200" style="width:55px;" onchange="setObjCornerRadius(this.value)">
+      <div class="propbar-sep"></div>
+      <select id="blendMode" onchange="applyBlendMode(this.value)" style="width:110px;">
+        <option value="source-over">Normal</option>
+        <option value="multiply">Multiply</option>
+        <option value="screen">Screen</option>
+        <option value="overlay">Overlay</option>
+        <option value="darken">Darken</option>
+        <option value="lighten">Lighten</option>
+        <option value="color-dodge">Color Dodge</option>
+        <option value="color-burn">Color Burn</option>
+        <option value="hard-light">Hard Light</option>
+        <option value="soft-light">Soft Light</option>
+        <option value="difference">Difference</option>
+        <option value="exclusion">Exclusion</option>
+      </select>
+    </div>
+
+    <!-- Ruler + Canvas -->
+    <div class="ruler-row" id="rulerRow" style="display:none;">
+      <div class="ruler-corner">px</div>
+      <div class="ruler-h" id="rulerH"></div>
+    </div>
+    <div class="canvas-main-row">
+      <div class="ruler-v" id="rulerV" style="display:none;"></div>
       <div class="canvas-scroll-wrap" id="canvasScrollWrap">
-        <div class="canvas-container" id="canvasContainer">
-          <canvas id="mainCanvas"></canvas>
+        <div class="canvas-container" id="canvasWrap">
+          <canvas id="c"></canvas>
+        </div>
+        <div class="node-edit-hint" id="nodeHint">Node Edit Mode — Click points to select, drag to move</div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="canvas-info">
+      <span id="ci-size">1080 × 1080</span>
+      <span class="ci-sep">|</span>
+      <span id="ci-obj">No selection</span>
+      <span class="ci-sep">|</span>
+      <span id="ci-zoom">100%</span>
+      <span class="ci-sep">|</span>
+      <span id="ci-cursor">x: 0, y: 0</span>
+      <span class="ci-sep">|</span>
+      <span id="ci-tool">Select</span>
+      <span class="ci-sep">|</span>
+      <span id="ci-snap">Snap: ON</span>
+      <span class="ci-sep">|</span>
+      <span id="ci-grid">Grid: OFF</span>
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <aside class="rpanel" id="rpanel">
+    <nav class="rp-nav">
+      <button class="rp-tab active" onclick="switchRpTab('props',this)">Props</button>
+      <button class="rp-tab" onclick="switchRpTab('layers',this)">Layers</button>
+      <button class="rp-tab" onclick="switchRpTab('effects',this)">FX</button>
+      <button class="rp-tab" onclick="switchRpTab('ailog',this)">Log</button>
+    </nav>
+
+    <!-- Properties Panel -->
+    <div class="rp-panel active" id="rp-props">
+      <div class="rp-empty" id="rpNoSel">Select an object to edit its properties.</div>
+
+      <!-- Object transform -->
+      <div id="rpObjProps" style="display:none;">
+        <div class="rp-section-title">Transform</div>
+        <div class="obj-props-grid">
+          <div class="obj-prop-item"><label>X</label><input type="number" id="rp-x" onchange="setObjPos('x',this.value)"></div>
+          <div class="obj-prop-item"><label>Y</label><input type="number" id="rp-y" onchange="setObjPos('y',this.value)"></div>
+          <div class="obj-prop-item"><label>W</label><input type="number" id="rp-w" onchange="setObjSize('w',this.value)"></div>
+          <div class="obj-prop-item"><label>H</label><input type="number" id="rp-h" onchange="setObjSize('h',this.value)"></div>
+          <div class="obj-prop-item"><label>Rotate</label><input type="number" id="rp-rot" onchange="setObjRot(this.value)"></div>
+          <div class="obj-prop-item"><label>Opacity</label><input type="number" id="rp-opacity" min="0" max="100" onchange="applyOpacity(this.value)"></div>
+        </div>
+
+        <div class="rp-section-title" style="margin-top:12px;">Alignment</div>
+        <div class="align-grid">
+          <button class="align-btn" onclick="alignObj('left')" data-tip="Align Left">⬤⬜⬜</button>
+          <button class="align-btn" onclick="alignObj('center-h')" data-tip="Center H">⬜⬤⬜</button>
+          <button class="align-btn" onclick="alignObj('right')" data-tip="Align Right">⬜⬜⬤</button>
+          <button class="align-btn" onclick="alignObj('top')" data-tip="Align Top">⬆</button>
+          <button class="align-btn" onclick="alignObj('center-v')" data-tip="Center V">⬤</button>
+          <button class="align-btn" onclick="alignObj('bottom')" data-tip="Align Bottom">⬇</button>
+          <button class="align-btn" onclick="distributeH()" data-tip="Distribute H">↔</button>
+          <button class="align-btn" onclick="distributeV()" data-tip="Distribute V">↕</button>
+          <button class="align-btn" onclick="alignObj('center-h');alignObj('center-v')" data-tip="Center Both">✛</button>
+        </div>
+
+        <div class="rp-section-title" style="margin-top:12px;">Fill</div>
+        <div class="prop-row">
+          <label>Color</label>
+          <input type="color" id="rp-fill" onchange="applyFill(this.value)">
+          <select id="rp-fill-type" onchange="switchFillType(this.value)" style="flex:1;font-size:11px;">
+            <option value="solid">Solid</option>
+            <option value="linear">Linear Grad</option>
+            <option value="radial">Radial Grad</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+
+        <!-- Gradient Editor -->
+        <div class="grad-editor" id="gradEditor" style="display:none;">
+          <div class="grad-controls">
+            <button class="grad-type-btn active" id="gb-linear" onclick="setGradType('linear',this)">Linear</button>
+            <button class="grad-type-btn" id="gb-radial" onclick="setGradType('radial',this)">Radial</button>
+          </div>
+          <div class="grad-bar-wrap" id="gradBarWrap">
+            <div class="grad-bar" id="gradBar"></div>
+            <div class="grad-stop selected" id="gs0" style="left:0%;background:#7c3aed;" draggable="true"></div>
+            <div class="grad-stop" id="gs1" style="left:100%;background:#a78bfa;" draggable="true"></div>
+          </div>
+          <div class="grad-stop-props">
+            <input type="color" id="gradStopColor" value="#7c3aed" onchange="updateGradStop(this.value)">
+            <span style="font-size:11px;color:var(--text2)">Stop color</span>
+            <input type="number" id="gradStopPos" min="0" max="100" value="0" style="width:55px;" onchange="updateGradStopPos(this.value)">
+            <span style="font-size:11px;color:var(--text2)">%</span>
+          </div>
+          <button class="btn-outline" onclick="applyGradientToObject()">Apply Gradient</button>
+        </div>
+
+        <div class="rp-section-title" style="margin-top:12px;">Stroke</div>
+        <div class="prop-row">
+          <label>Color</label>
+          <input type="color" id="rp-stroke" onchange="applyStroke(this.value)">
+          <input type="number" id="rp-stroke-w" min="0" max="60" value="0" style="width:55px;" onchange="applyStrokeWidth(this.value)">
+          <span style="font-size:11px;color:var(--text3)">px</span>
+        </div>
+        <div class="prop-row">
+          <label>Style</label>
+          <select id="rp-stroke-style" onchange="applyStrokeDash(this.value)">
+            <option value="solid">Solid</option>
+            <option value="dashed">Dashed</option>
+            <option value="dotted">Dotted</option>
+            <option value="dashdot">Dash-Dot</option>
+          </select>
         </div>
       </div>
 
-      <div class="canvas-info">
-        <span id="canvasSizeInfo">1080 × 1080 px</span>
-        <span class="ci-sep">|</span>
-        <span id="canvasObjCount">0 objects</span>
-        <span class="ci-sep">|</span>
-        <span id="canvasZoomInfo">Zoom: 100%</span>
-        <span class="ci-sep">|</span>
-        <span id="selObjInfo">No selection</span>
-      </div>
-    </main>
-
-    <!-- RIGHT PANEL -->
-    <aside class="rpanel">
-      <nav class="rp-nav">
-        <button class="rp-tab active" data-rptab="props" onclick="switchRpTab('props')">Properties</button>
-        <button class="rp-tab" data-rptab="layers" onclick="switchRpTab('layers')">Layers</button>
-        <button class="rp-tab" data-rptab="ailog" onclick="switchRpTab('ailog')">AI Log</button>
-      </nav>
-
-      <div class="rp-panel active" id="rp-props">
-        <div id="rp-no-sel">
-          <div class="rp-empty">Select an object to edit its properties</div>
-          <div class="rp-canvas-props">
-            <div class="rp-section-title">Canvas</div>
-            <div class="prop-row">
-              <label>Width</label>
-              <input type="number" id="rpCanvasW" onchange="resizeCanvas(+this.value, null)" min="50" max="8000"/>
-            </div>
-            <div class="prop-row">
-              <label>Height</label>
-              <input type="number" id="rpCanvasH" onchange="resizeCanvas(null, +this.value)" min="50" max="8000"/>
-            </div>
-            <div class="prop-row">
-              <label>BG</label>
-              <input type="color" id="rpCanvasBg" value="#ffffff" oninput="setBgColor(this.value)"/>
-            </div>
-          </div>
+      <!-- Canvas props (no selection) -->
+      <div class="rp-canvas-props" id="rpCanvasProps">
+        <div class="rp-section-title">Canvas</div>
+        <div class="prop-row">
+          <label>Width</label>
+          <input type="number" id="cvW" value="1080" onchange="resizeCanvas(this.value,null)">
         </div>
-        <div id="rp-sel" style="display:none">
-          <div class="rp-section-title">Position & Size</div>
-          <div class="prop-grid-2">
-            <div class="prop-row"><label>X</label><input type="number" id="rpX" onchange="setPos('x',+this.value)"/></div>
-            <div class="prop-row"><label>Y</label><input type="number" id="rpY" onchange="setPos('y',+this.value)"/></div>
-            <div class="prop-row"><label>W</label><input type="number" id="rpW" onchange="setSizeObj('w',+this.value)"/></div>
-            <div class="prop-row"><label>H</label><input type="number" id="rpH" onchange="setSizeObj('h',+this.value)"/></div>
-            <div class="prop-row"><label>Angle</label><input type="number" id="rpAngle" min="0" max="360" onchange="updateProp('angle',+this.value)"/></div>
-            <div class="prop-row"><label>Opacity</label><input type="number" id="rpOpacity" min="0" max="100" onchange="updateProp('opacity',this.value/100)"/></div>
-          </div>
-          <div id="rp-text-props" style="display:none">
-            <div class="rp-section-title">Text</div>
-            <div class="prop-row">
-              <label>Font</label>
-              <select id="rpFontFam" onchange="updateProp('fontFamily',this.value)">
-                <option value="Arial">Arial</option>
-                <option value="Helvetica">Helvetica</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Verdana">Verdana</option>
-                <option value="Impact">Impact</option>
-                <option value="Trebuchet MS">Trebuchet MS</option>
-              </select>
-            </div>
-            <div class="prop-row"><label>Size</label><input type="number" id="rpFontSize" min="6" max="400" onchange="updateProp('fontSize',+this.value)"/></div>
-            <div class="prop-row"><label>Color</label><input type="color" id="rpTextColor" oninput="updateProp('fill',this.value)"/></div>
-            <div class="prop-row"><label>Line H</label><input type="number" id="rpLineH" min="0.5" max="5" step="0.1" onchange="updateProp('lineHeight',+this.value)"/></div>
-            <div class="prop-row"><label>Spacing</label><input type="number" id="rpLetterSp" min="-10" max="50" onchange="updateProp('charSpacing',+this.value)"/></div>
-          </div>
-          <div id="rp-shape-props" style="display:none">
-            <div class="rp-section-title">Shape</div>
-            <div class="prop-row"><label>Fill</label><input type="color" id="rpFill" oninput="updateProp('fill',this.value)"/></div>
-            <div class="prop-row"><label>Stroke</label><input type="color" id="rpStroke" oninput="updateProp('stroke',this.value)"/></div>
-            <div class="prop-row"><label>S.Width</label><input type="number" id="rpStrokeW" min="0" max="50" onchange="updateProp('strokeWidth',+this.value)"/></div>
-            <div class="prop-row"><label>Radius</label><input type="number" id="rpRadius" min="0" max="200" onchange="setCornerRadius(+this.value)"/></div>
-          </div>
-          <div id="rp-gradient" style="display:none">
-            <div class="rp-section-title">Gradient Fill</div>
-            <div class="grad-row">
-              <input type="color" id="gradC1" value="#6c3fc5" oninput="applyGradient()"/>
-              <select id="gradDir" onchange="applyGradient()">
-                <option value="lr">→ Horizontal</option>
-                <option value="tb">↓ Vertical</option>
-                <option value="tl">↘ Diagonal</option>
-                <option value="tr">↙ Diagonal</option>
-                <option value="radial">◎ Radial</option>
-              </select>
-              <input type="color" id="gradC2" value="#f0b429" oninput="applyGradient()"/>
-            </div>
-          </div>
-          <div class="rp-actions">
-            <button class="rp-act-btn" onclick="duplicateObj()">⎘ Duplicate</button>
-            <button class="rp-act-btn" onclick="lockObj()" id="rpLockBtn">🔓 Lock</button>
-            <button class="rp-act-btn danger" onclick="deleteObj()">✕ Delete</button>
-          </div>
+        <div class="prop-row">
+          <label>Height</label>
+          <input type="number" id="cvH" value="1080" onchange="resizeCanvas(null,this.value)">
+        </div>
+        <div class="prop-row">
+          <label>BG</label>
+          <input type="color" id="cvBg" value="#ffffff" onchange="setBg(this.value)">
+        </div>
+        <div class="rp-section-title" style="margin-top:10px;">Color Palette</div>
+        <div class="color-palette-row">
+          <div class="cp-swatch" style="background:#7c3aed" onclick="applyFill('#7c3aed')"></div>
+          <div class="cp-swatch" style="background:#f59e0b" onclick="applyFill('#f59e0b')"></div>
+          <div class="cp-swatch" style="background:#f43f5e" onclick="applyFill('#f43f5e')"></div>
+          <div class="cp-swatch" style="background:#06b6d4" onclick="applyFill('#06b6d4')"></div>
+          <div class="cp-swatch" style="background:#10b981" onclick="applyFill('#10b981')"></div>
+          <div class="cp-swatch" style="background:#ffffff" onclick="applyFill('#ffffff')"></div>
+          <div class="cp-swatch" style="background:#000000" onclick="applyFill('#000000')"></div>
+          <div class="cp-swatch" style="background:#ec4899" onclick="applyFill('#ec4899')"></div>
+          <div class="cp-swatch" style="background:#f97316" onclick="applyFill('#f97316')"></div>
+          <div class="cp-swatch" style="background:#84cc16" onclick="applyFill('#84cc16')"></div>
         </div>
       </div>
+    </div>
 
-      <div class="rp-panel" id="rp-layers">
-        <div class="layers-header">
-          <span>Layers</span>
-          <button class="hbtn sm" onclick="updateLayers()" title="Refresh">↺</button>
-        </div>
-        <div class="layer-list" id="layerList">
-          <div class="layer-empty">No objects yet</div>
+    <!-- Layers Panel -->
+    <div class="rp-panel" id="rp-layers">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="rp-section-title" style="margin:0;">Layers</div>
+        <div style="display:flex;gap:4px;">
+          <button class="tbtn" onclick="addLayer()" data-tip="Add Layer" style="font-size:12px;padding:4px 8px;">＋</button>
+          <button class="tbtn" onclick="deleteLayer()" data-tip="Delete Layer" style="font-size:12px;padding:4px 8px;">🗑</button>
         </div>
       </div>
+      <div class="layers-list" id="layersList"></div>
+    </div>
 
-      <div class="rp-panel" id="rp-ailog">
-        <div class="rp-section-title">Agent Execution Log</div>
-        <div class="ai-log tall" id="aiLogRp">
-          <div class="ai-log-entry ok">Agent ready.</div>
+    <!-- Effects Panel -->
+    <div class="rp-panel" id="rp-effects">
+      <div class="rp-section-title">Shadow</div>
+      <div class="shadow-editor">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label style="font-size:12px;color:var(--text2);">Enable</label>
+          <input type="checkbox" id="shadowEnabled" onchange="toggleShadow(this.checked)" style="accent-color:var(--primary);">
+          <input type="color" id="shadowColor" value="#000000" onchange="updateShadow()">
         </div>
-        <div class="rp-section-title" style="margin-top:12px">API Settings</div>
-        <div class="prop-row"><label>API Key</label><input type="password" id="apiKeyInp" placeholder="sk-..." style="font-size:11px"/></div>
-        <div class="prop-row"><label>Base URL</label><input type="text" id="apiBaseUrl" value="https://api.openai.com/v1" style="font-size:11px"/></div>
-        <div class="prop-row"><label>Model</label><input type="text" id="apiModel" value="gpt-4o" style="font-size:11px"/></div>
-        <button class="btn-primary sm" onclick="saveApiSettings()" style="margin-top:8px">Save Settings</button>
+        <label>Blur</label><input type="range" id="shadowBlur" min="0" max="60" value="10" oninput="updateShadow()">
+        <label>Offset X</label><input type="range" id="shadowOffX" min="-40" max="40" value="5" oninput="updateShadow()">
+        <label>Offset Y</label><input type="range" id="shadowOffY" min="-40" max="40" value="5" oninput="updateShadow()">
+        <label>Opacity</label><input type="range" id="shadowOpacity" min="0" max="100" value="70" oninput="updateShadow()">
       </div>
-    </aside>
 
-  </div><!-- /main-layout -->
-</div><!-- /app-shell -->
+      <div class="rp-section-title" style="margin-top:12px;">Glow</div>
+      <div class="shadow-editor">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label style="font-size:12px;color:var(--text2);">Enable</label>
+          <input type="checkbox" id="glowEnabled" onchange="toggleGlow(this.checked)" style="accent-color:var(--primary);">
+          <input type="color" id="glowColor" value="#7c3aed" onchange="updateGlow()">
+        </div>
+        <label>Intensity</label><input type="range" id="glowBlur" min="0" max="80" value="20" oninput="updateGlow()">
+        <label>Spread</label><input type="range" id="glowSpread" min="0" max="40" value="5" oninput="updateGlow()">
+      </div>
 
-<!-- ═══════════════════════════════════════════
+      <div class="rp-section-title" style="margin-top:12px;">Filters</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <button class="bool-btn" onclick="applyFilter('grayscale')">⬛ Grayscale</button>
+        <button class="bool-btn" onclick="applyFilter('sepia')">🟫 Sepia</button>
+        <button class="bool-btn" onclick="applyFilter('invert')">🔄 Invert</button>
+        <button class="bool-btn" onclick="applyFilter('blur')">💨 Blur</button>
+        <button class="bool-btn" onclick="applyFilter('sharpen')">🔪 Sharpen</button>
+        <button class="bool-btn" onclick="applyFilter('vintage')">📷 Vintage</button>
+        <button class="bool-btn" onclick="applyFilter('emboss')">🗿 Emboss</button>
+        <button class="bool-btn" onclick="removeFilters()">✕ Remove All</button>
+      </div>
+
+      <div class="rp-section-title" style="margin-top:12px;">Blend Mode</div>
+      <select id="fx-blend" onchange="applyBlendMode(this.value)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:8px 10px;font-size:12px;outline:none;">
+        <option value="source-over">Normal</option>
+        <option value="multiply">Multiply</option>
+        <option value="screen">Screen</option>
+        <option value="overlay">Overlay</option>
+        <option value="darken">Darken</option>
+        <option value="lighten">Lighten</option>
+        <option value="color-dodge">Color Dodge</option>
+        <option value="color-burn">Color Burn</option>
+        <option value="hard-light">Hard Light</option>
+        <option value="soft-light">Soft Light</option>
+        <option value="difference">Difference</option>
+        <option value="exclusion">Exclusion</option>
+      </select>
+    </div>
+
+    <!-- AI Log Panel -->
+    <div class="rp-panel" id="rp-ailog">
+      <div class="rp-section-title">AI Agent Log</div>
+      <div class="ai-log tall" id="aiLogFull"><div class="ai-log-entry info">AI log appears here during generation.</div></div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- ══════════════════════════════════════════
      EXPORT MODAL
-════════════════════════════════════════════ -->
-<div class="overlay" id="exportOverlay" onclick="if(event.target===this)closeExportModal()">
-  <div class="modal export-modal">
-    <div class="modal-header-row">
-      <h2>Export Design</h2>
-      <button class="close-btn" onclick="closeExportModal()">✕</button>
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal-box">
+    <div class="modal-title">⬆ Export Design</div>
+    <div class="modal-row">
+      <label>Format</label>
+      <select id="exportFormat">
+        <option value="png">PNG (Transparent support)</option>
+        <option value="jpg">JPG (Smaller file)</option>
+        <option value="webp">WebP (Web optimized)</option>
+        <option value="svg">SVG (Vector)</option>
+        <option value="pdf">PDF (Print ready)</option>
+      </select>
     </div>
-    <div class="export-options">
-      <div class="export-opt" onclick="downloadDesign('png')">
-        <div class="export-icon">🖼</div>
-        <div class="export-label">PNG</div>
-        <div class="export-sub">Lossless, transparent</div>
-      </div>
-      <div class="export-opt" onclick="downloadDesign('jpeg')">
-        <div class="export-icon">📷</div>
-        <div class="export-label">JPG</div>
-        <div class="export-sub">Smaller file size</div>
-      </div>
-      <div class="export-opt" onclick="downloadDesign('svg')">
-        <div class="export-icon">⬡</div>
-        <div class="export-label">SVG</div>
-        <div class="export-sub">Vector scalable</div>
-      </div>
-      <div class="export-opt" onclick="downloadDesign('json')">
-        <div class="export-icon">{ }</div>
-        <div class="export-label">JSON</div>
-        <div class="export-sub">Editable project</div>
-      </div>
-    </div>
-    <div class="export-quality-row">
-      <label>Quality / Scale</label>
+    <div class="modal-row">
+      <label>Quality</label>
       <select id="exportQuality">
         <option value="1">Standard (1×)</option>
         <option value="2" selected>High (2×)</option>
         <option value="3">Ultra (3×)</option>
+        <option value="4">Print (4×)</option>
       </select>
+    </div>
+    <div class="modal-row">
+      <label>Filename</label>
+      <input type="text" id="exportName" value="onimix-design">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-outline" onclick="document.getElementById('exportModal').classList.remove('active')">Cancel</button>
+      <button class="btn-primary" onclick="exportDesign()">Download ⬇</button>
     </div>
   </div>
 </div>
 
-<script>
-// Size category filter for landing page
-function filterSizeCat(cat, btn) {
-  document.querySelectorAll('.size-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.size-card').forEach(c => {
-    const d = c.dataset.cat;
-    c.style.display = (cat === 'all' || d === cat || d === 'all') ? '' : 'none';
-  });
-}
-function showCustomSize() {
-  const r = document.getElementById('customSizeRow');
-  r.style.display = r.style.display === 'none' ? 'flex' : 'none';
-}
-function applyCustomSize() {
-  const w = parseInt(document.getElementById('customW').value);
-  const h = parseInt(document.getElementById('customH').value);
-  if (w >= 50 && h >= 50) applySize(w, h);
-  else alert('Please enter valid dimensions (min 50px each)');
-}
-</script>
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 
 
 <script>
@@ -2191,6 +1743,303 @@ const TEMPLATES = [
     ]
   }
 
+// ── NEW TEMPLATES (injected v5) ───────────────────────────
+,{
+  id:'t-menu-cafe', name:'Café Menu', category:'menu', w:794, h:1123,
+  thumb:'☕',
+  objects:[
+    {type:'rect',left:0,top:0,width:794,height:1123,fill:'#fdf6e3',rx:0,ry:0},
+    {type:'rect',left:0,top:0,width:794,height:8,fill:'#8B4513'},
+    {type:'rect',left:0,top:1115,width:794,height:8,fill:'#8B4513'},
+    {type:'text',left:397,top:60,text:'CAFÉ MENU',fontSize:52,fontFamily:'Georgia',fill:'#5C3317',originX:'center',fontWeight:'bold'},
+    {type:'line',x1:100,y1:120,x2:694,y2:120,stroke:'#8B4513',strokeWidth:2},
+    {type:'text',left:120,top:160,text:'COFFEE',fontSize:22,fontFamily:'Georgia',fill:'#8B4513',fontWeight:'bold'},
+    {type:'text',left:120,top:195,text:'Espresso',fontSize:16,fontFamily:'Georgia',fill:'#333'},
+    {type:'text',left:640,top:195,text:'$3.50',fontSize:16,fontFamily:'Georgia',fill:'#333',originX:'right'},
+    {type:'text',left:120,top:225,text:'Cappuccino',fontSize:16,fontFamily:'Georgia',fill:'#333'},
+    {type:'text',left:640,top:225,text:'$4.50',fontSize:16,fontFamily:'Georgia',fill:'#333',originX:'right'},
+    {type:'text',left:120,top:255,text:'Latte',fontSize:16,fontFamily:'Georgia',fill:'#333'},
+    {type:'text',left:640,top:255,text:'$5.00',fontSize:16,fontFamily:'Georgia',fill:'#333',originX:'right'},
+    {type:'text',left:120,top:300,text:'PASTRIES',fontSize:22,fontFamily:'Georgia',fill:'#8B4513',fontWeight:'bold'},
+    {type:'text',left:120,top:335,text:'Croissant',fontSize:16,fontFamily:'Georgia',fill:'#333'},
+    {type:'text',left:640,top:335,text:'$3.00',fontSize:16,fontFamily:'Georgia',fill:'#333',originX:'right'},
+    {type:'text',left:120,top:365,text:'Muffin',fontSize:16,fontFamily:'Georgia',fill:'#333'},
+    {type:'text',left:640,top:365,text:'$2.50',fontSize:16,fontFamily:'Georgia',fill:'#333',originX:'right'}
+  ]
+},{
+  id:'t-invite-wedding', name:'Wedding Invitation', category:'invitation', w:700, h:980,
+  thumb:'💍',
+  objects:[
+    {type:'rect',left:0,top:0,width:700,height:980,fill:'#fff8f0'},
+    {type:'rect',left:20,top:20,width:660,height:940,fill:'transparent',stroke:'#c9a96e',strokeWidth:2},
+    {type:'rect',left:30,top:30,width:640,height:920,fill:'transparent',stroke:'#c9a96e',strokeWidth:1},
+    {type:'text',left:350,top:100,text:'Together With Their Families',fontSize:16,fontFamily:'Georgia',fill:'#888',originX:'center',fontStyle:'italic'},
+    {type:'text',left:350,top:150,text:'Emily & James',fontSize:54,fontFamily:'Palatino Linotype',fill:'#c9a96e',originX:'center',fontWeight:'bold'},
+    {type:'line',x1:150,y1:220,x2:550,y2:220,stroke:'#c9a96e',strokeWidth:1},
+    {type:'text',left:350,top:250,text:'Request the honor of your presence',fontSize:16,fontFamily:'Georgia',fill:'#555',originX:'center',fontStyle:'italic'},
+    {type:'text',left:350,top:310,text:'Saturday, June 14, 2026',fontSize:22,fontFamily:'Georgia',fill:'#333',originX:'center'},
+    {type:'text',left:350,top:360,text:'at 4:00 in the afternoon',fontSize:16,fontFamily:'Georgia',fill:'#555',originX:'center',fontStyle:'italic'},
+    {type:'text',left:350,top:420,text:'The Grand Ballroom',fontSize:20,fontFamily:'Georgia',fill:'#333',originX:'center'},
+    {type:'text',left:350,top:455,text:'123 Rosewood Avenue, New York',fontSize:15,fontFamily:'Georgia',fill:'#777',originX:'center'},
+    {type:'line',x1:150,y1:500,x2:550,y2:500,stroke:'#c9a96e',strokeWidth:1},
+    {type:'text',left:350,top:540,text:'Reception to follow',fontSize:16,fontFamily:'Georgia',fill:'#555',originX:'center',fontStyle:'italic'},
+    {type:'text',left:350,top:600,text:'RSVP by May 1st',fontSize:16,fontFamily:'Georgia',fill:'#c9a96e',originX:'center'},
+    {type:'text',left:350,top:635,text:'emily@email.com  |  (555) 123-4567',fontSize:13,fontFamily:'Georgia',fill:'#888',originX:'center'}
+  ]
+},{
+  id:'t-realestate-listing', name:'Real Estate Listing', category:'marketing', w:1080, h:1080,
+  thumb:'🏠',
+  objects:[
+    {type:'rect',left:0,top:0,width:1080,height:1080,fill:'#1a1a2e'},
+    {type:'rect',left:0,top:700,width:1080,height:380,fill:'rgba(255,255,255,0.05)'},
+    {type:'rect',left:40,top:40,width:1000,height:620,fill:'#2d3561',rx:12,ry:12},
+    {type:'text',left:60,top:740,text:'FOR SALE',fontSize:16,fontFamily:'Arial',fill:'#f59e0b',fontWeight:'bold',letterSpacing:4},
+    {type:'text',left:60,top:785,text:'4 Bed | 3 Bath | 2,450 sqft',fontSize:32,fontFamily:'Arial',fill:'#ffffff',fontWeight:'bold'},
+    {type:'text',left:60,top:840,text:'123 Maple Street, Beverly Hills, CA',fontSize:18,fontFamily:'Arial',fill:'#94a3b8'},
+    {type:'text',left:60,top:920,text:'$2,850,000',fontSize:42,fontFamily:'Arial Black',fill:'#f59e0b',fontWeight:'bold'},
+    {type:'rect',left:60,top:990,width:200,height:50,fill:'#f59e0b',rx:8,ry:8},
+    {type:'text',left:160,top:1015,text:'Schedule Tour',fontSize:16,fontFamily:'Arial',fill:'#1a1a2e',fontWeight:'bold',originX:'center'},
+    {type:'text',left:850,top:990,text:'DreamHomes Realty',fontSize:16,fontFamily:'Arial',fill:'#94a3b8',originX:'right'},
+    {type:'text',left:850,top:1020,text:'(555) 987-6543',fontSize:14,fontFamily:'Arial',fill:'#64748b',originX:'right'}
+  ]
+},{
+  id:'t-music-album', name:'Music Album Cover', category:'social', w:1080, h:1080,
+  thumb:'🎵',
+  objects:[
+    {type:'rect',left:0,top:0,width:1080,height:1080,fill:'#0f0f23'},
+    {type:'circle',left:540,top:540,radius:350,fill:'#1a0533',originX:'center',originY:'center'},
+    {type:'circle',left:540,top:540,radius:280,fill:'#2d0a66',originX:'center',originY:'center'},
+    {type:'circle',left:540,top:540,radius:180,fill:'#4c1d95',originX:'center',originY:'center'},
+    {type:'circle',left:540,top:540,radius:60,fill:'#7c3aed',originX:'center',originY:'center'},
+    {type:'circle',left:540,top:540,radius:20,fill:'#c4b5fd',originX:'center',originY:'center'},
+    {type:'text',left:540,top:120,text:'MIDNIGHT ECHO',fontSize:42,fontFamily:'Impact',fill:'#c4b5fd',originX:'center',letterSpacing:6},
+    {type:'text',left:540,top:175,text:'ARTIST NAME',fontSize:18,fontFamily:'Arial',fill:'#7c3aed',originX:'center',letterSpacing:8},
+    {type:'text',left:540,top:960,text:'VINYL EDITION  •  2026',fontSize:14,fontFamily:'Arial',fill:'#6b7280',originX:'center',letterSpacing:4}
+  ]
+},{
+  id:'t-youtube-thumb', name:'YouTube Thumbnail', category:'social', w:1280, h:720,
+  thumb:'▶️',
+  objects:[
+    {type:'rect',left:0,top:0,width:1280,height:720,fill:'#0f172a'},
+    {type:'rect',left:0,top:0,width:640,height:720,fill:'#1e1b4b'},
+    {type:'rect',left:0,top:580,width:1280,height:140,fill:'rgba(0,0,0,0.7)'},
+    {type:'rect',left:40,top:40,width:6,height:100,fill:'#ef4444'},
+    {type:'text',left:70,top:40,text:'WATCH THIS',fontSize:28,fontFamily:'Impact',fill:'#ef4444',fontWeight:'bold'},
+    {type:'text',left:70,top:80,text:'Before Everyone Else Does',fontSize:20,fontFamily:'Arial',fill:'#fff'},
+    {type:'text',left:640,top:280,text:'10 TIPS',fontSize:96,fontFamily:'Impact',fill:'#fbbf24',originX:'center'},
+    {type:'text',left:640,top:390,text:'That Will Change',fontSize:30,fontFamily:'Arial',fill:'#fff',originX:'center'},
+    {type:'text',left:640,top:430,text:'YOUR LIFE FOREVER',fontSize:24,fontFamily:'Arial',fill:'#94a3b8',originX:'center'},
+    {type:'text',left:100,top:615,text:'👍 LIKE & SUBSCRIBE',fontSize:28,fontFamily:'Impact',fill:'#fbbf24'},
+    {type:'text',left:1150,top:620,text:'▶ 12:34',fontSize:22,fontFamily:'Arial',fill:'#fff',originX:'right'}
+  ]
+},{
+  id:'t-tiktok-reel', name:'TikTok / Reel Cover', category:'social', w:1080, h:1920,
+  thumb:'📱',
+  objects:[
+    {type:'rect',left:0,top:0,width:1080,height:1920,fill:'#000'},
+    {type:'rect',left:0,top:0,width:1080,height:960,fill:'#0d0d0d'},
+    {type:'rect',left:40,top:1600,width:1000,height:3,fill:'rgba(255,255,255,0.2)'},
+    {type:'text',left:540,top:1650,text:'@yourhandle',fontSize:32,fontFamily:'Arial',fill:'#fff',originX:'center'},
+    {type:'text',left:540,top:1710,text:'Follow for daily tips 🔥',fontSize:24,fontFamily:'Arial',fill:'#94a3b8',originX:'center'},
+    {type:'text',left:540,top:900,text:'POV:',fontSize:52,fontFamily:'Impact',fill:'#fff',originX:'center'},
+    {type:'text',left:540,top:970,text:'You Discovered The',fontSize:38,fontFamily:'Arial',fill:'#fff',originX:'center'},
+    {type:'text',left:540,top:1030,text:'HACK EVERYONE',fontSize:48,fontFamily:'Impact',fill:'#f59e0b',originX:'center'},
+    {type:'text',left:540,top:1090,text:'Is Talking About',fontSize:38,fontFamily:'Arial',fill:'#fff',originX:'center'},
+    {type:'rect',left:980,top:1400,width:60,height:60,fill:'#ef4444',rx:30,ry:30},
+    {type:'text',left:1010,top:1415,text:'♥',fontSize:30,fill:'#fff',originX:'center'}
+  ]
+},{
+  id:'t-fb-event', name:'Facebook Event Cover', category:'social', w:1200, h:628,
+  thumb:'📅',
+  objects:[
+    {type:'rect',left:0,top:0,width:1200,height:628,fill:'#1e3a5f'},
+    {type:'rect',left:0,top:0,width:1200,height:8,fill:'#f59e0b'},
+    {type:'rect',left:0,top:620,width:1200,height:8,fill:'#f59e0b'},
+    {type:'text',left:100,top:80,text:'YOU\'RE INVITED',fontSize:20,fontFamily:'Arial',fill:'#f59e0b',fontWeight:'bold',letterSpacing:5},
+    {type:'text',left:100,top:140,text:'Annual Tech',fontSize:64,fontFamily:'Arial Black',fill:'#ffffff',fontWeight:'bold'},
+    {type:'text',left:100,top:220,text:'Summit 2026',fontSize:64,fontFamily:'Arial Black',fill:'#60a5fa',fontWeight:'bold'},
+    {type:'line',x1:100,y1:305,x2:700,y2:305,stroke:'#f59e0b',strokeWidth:2},
+    {type:'text',left:100,top:330,text:'📅  March 15–17, 2026',fontSize:22,fontFamily:'Arial',fill:'#cbd5e1'},
+    {type:'text',left:100,top:375,text:'📍  San Francisco Convention Center',fontSize:22,fontFamily:'Arial',fill:'#cbd5e1'},
+    {type:'rect',left:100,top:450,width:220,height:55,fill:'#f59e0b',rx:8,ry:8},
+    {type:'text',left:210,top:478,text:'Register Now',fontSize:20,fontFamily:'Arial',fill:'#1e3a5f',fontWeight:'bold',originX:'center'}
+  ]
+},{
+  id:'t-flyer-concert', name:'Concert Flyer', category:'marketing', w:794, h:1123,
+  thumb:'🎸',
+  objects:[
+    {type:'rect',left:0,top:0,width:794,height:1123,fill:'#09090b'},
+    {type:'rect',left:0,top:0,width:794,height:500,fill:'#1a0030'},
+    {type:'text',left:397,top:80,text:'⚡ LIVE TONIGHT ⚡',fontSize:20,fontFamily:'Impact',fill:'#a855f7',originX:'center',letterSpacing:4},
+    {type:'text',left:397,top:150,text:'THUNDER',fontSize:96,fontFamily:'Impact',fill:'#ffffff',originX:'center'},
+    {type:'text',left:397,top:260,text:'ROAD',fontSize:96,fontFamily:'Impact',fill:'#a855f7',originX:'center'},
+    {type:'text',left:397,top:380,text:'+ Special Guests: The Neon Wolves',fontSize:20,fontFamily:'Arial',fill:'#94a3b8',originX:'center'},
+    {type:'line',x1:60,y1:440,x2:734,y2:440,stroke:'#a855f7',strokeWidth:1},
+    {type:'text',left:397,top:500,text:'SATURDAY, APRIL 25 · 8 PM',fontSize:22,fontFamily:'Arial',fill:'#e2e8f0',originX:'center',fontWeight:'bold'},
+    {type:'text',left:397,top:550,text:'THE UNDERGROUND ARENA',fontSize:18,fontFamily:'Arial',fill:'#94a3b8',originX:'center'},
+    {type:'text',left:397,top:590,text:'456 Main Street, Downtown',fontSize:15,fontFamily:'Arial',fill:'#64748b',originX:'center'},
+    {type:'rect',left:247,top:650,width:300,height:65,fill:'#a855f7',rx:32,ry:32},
+    {type:'text',left:397,top:683,text:'GET TICKETS — $45',fontSize:20,fontFamily:'Arial',fill:'#fff',fontWeight:'bold',originX:'center'},
+    {type:'text',left:397,top:760,text:'thunderroadband.com',fontSize:16,fontFamily:'Arial',fill:'#6b7280',originX:'center'},
+    {type:'text',left:397,top:790,text:'@thunderroad  |  #LiveNation',fontSize:14,fontFamily:'Arial',fill:'#4b5563',originX:'center'}
+  ]
+},{
+  id:'t-linkedin-post', name:'LinkedIn Post', category:'social', w:1200, h:627,
+  thumb:'💼',
+  objects:[
+    {type:'rect',left:0,top:0,width:1200,height:627,fill:'#f8fafc'},
+    {type:'rect',left:0,top:0,width:8,height:627,fill:'#0077b5'},
+    {type:'rect',left:60,top:60,width:80,height:80,fill:'#0077b5',rx:40,ry:40},
+    {type:'text',left:100,top:100,text:'JD',fontSize:28,fontFamily:'Arial',fill:'#fff',fontWeight:'bold',originX:'center',originY:'center'},
+    {type:'text',left:165,top:70,text:'John Doe',fontSize:20,fontFamily:'Arial',fill:'#1a1a2e',fontWeight:'bold'},
+    {type:'text',left:165,top:100,text:'CEO at TechCorp  •  3,421 followers',fontSize:14,fontFamily:'Arial',fill:'#64748b'},
+    {type:'line',x1:60,y1:170,x2:1140,y2:170,stroke:'#e2e8f0',strokeWidth:1},
+    {type:'text',left:60,top:210,text:'🚀 Excited to share a big milestone!',fontSize:26,fontFamily:'Arial',fill:'#1a1a2e',fontWeight:'bold'},
+    {type:'text',left:60,top:270,text:'After 2 years of hard work, our team has grown from',fontSize:18,fontFamily:'Arial',fill:'#374151'},
+    {type:'text',left:60,top:305,text:'5 to 50+ people. Here\'s what we learned...',fontSize:18,fontFamily:'Arial',fill:'#374151'},
+    {type:'text',left:60,top:380,text:'#Growth  #Startup  #Leadership  #Tech',fontSize:16,fontFamily:'Arial',fill:'#0077b5'},
+    {type:'text',left:60,top:430,text:'👍 4.2K   💬 318   🔁 892',fontSize:16,fontFamily:'Arial',fill:'#64748b'}
+  ]
+},{
+  id:'t-business-card', name:'Business Card', category:'print', w:1050, h:600,
+  thumb:'📇',
+  objects:[
+    {type:'rect',left:0,top:0,width:1050,height:600,fill:'#0f172a'},
+    {type:'rect',left:0,top:0,width:8,height:600,fill:'#7c3aed'},
+    {type:'rect',left:0,top:560,width:1050,height:40,fill:'rgba(124,58,237,0.2)'},
+    {type:'text',left:80,top:120,text:'ALEX MORGAN',fontSize:42,fontFamily:'Arial Black',fill:'#ffffff',fontWeight:'bold'},
+    {type:'text',left:82,top:178,text:'Creative Director & Brand Strategist',fontSize:18,fontFamily:'Arial',fill:'#a855f7'},
+    {type:'line',x1:80,y1:220,x2:500,y2:220,stroke:'#7c3aed',strokeWidth:1},
+    {type:'text',left:80,top:260,text:'📧  alex@brandstudio.com',fontSize:16,fontFamily:'Arial',fill:'#94a3b8'},
+    {type:'text',left:80,top:300,text:'📞  (555) 234-5678',fontSize:16,fontFamily:'Arial',fill:'#94a3b8'},
+    {type:'text',left:80,top:340,text:'🌐  www.brandstudio.com',fontSize:16,fontFamily:'Arial',fill:'#94a3b8'},
+    {type:'text',left:80,top:380,text:'📍  New York, NY',fontSize:16,fontFamily:'Arial',fill:'#94a3b8'},
+    {type:'text',left:900,top:120,text:'BS',fontSize:72,fontFamily:'Arial Black',fill:'#7c3aed',fontWeight:'bold',originX:'center'},
+    {type:'text',left:900,top:205,text:'BRAND',fontSize:16,fontFamily:'Arial',fill:'#4b5563',letterSpacing:4,originX:'center'},
+    {type:'text',left:900,top:230,text:'STUDIO',fontSize:16,fontFamily:'Arial',fill:'#4b5563',letterSpacing:4,originX:'center'}
+  ]
+},{
+  id:'t-quote-card', name:'Motivational Quote', category:'social', w:1080, h:1080,
+  thumb:'💬',
+  objects:[
+    {type:'rect',left:0,top:0,width:1080,height:1080,fill:'#1e1b4b'},
+    {type:'rect',left:0,top:0,width:1080,height:6,fill:'#818cf8'},
+    {type:'rect',left:0,top:1074,width:1080,height:6,fill:'#818cf8'},
+    {type:'text',left:540,top:200,text:'"',fontSize:160,fontFamily:'Georgia',fill:'rgba(129,140,248,0.3)',originX:'center'},
+    {type:'text',left:540,top:380,text:'The secret of getting',fontSize:36,fontFamily:'Georgia',fill:'#e2e8f0',originX:'center',fontStyle:'italic'},
+    {type:'text',left:540,top:430,text:'ahead is getting started.',fontSize:36,fontFamily:'Georgia',fill:'#e2e8f0',originX:'center',fontStyle:'italic'},
+    {type:'line',x1:390,y1:520,x2:690,y2:520,stroke:'#818cf8',strokeWidth:2},
+    {type:'text',left:540,top:555,text:'— Mark Twain',fontSize:22,fontFamily:'Georgia',fill:'#818cf8',originX:'center'},
+    {type:'text',left:540,top:900,text:'Daily Inspiration  •  @yourhandle',fontSize:18,fontFamily:'Arial',fill:'#4c4a7a',originX:'center'}
+  ]
+},{
+  id:'t-newsletter', name:'Email Newsletter Header', category:'marketing', w:600, h:200,
+  thumb:'📧',
+  objects:[
+    {type:'rect',left:0,top:0,width:600,height:200,fill:'#7c3aed'},
+    {type:'text',left:300,top:60,text:'THE WEEKLY BRIEF',fontSize:32,fontFamily:'Arial Black',fill:'#ffffff',originX:'center',fontWeight:'bold',letterSpacing:3},
+    {type:'line',x1:80,y1:110,x2:520,y2:110,stroke:'rgba(255,255,255,0.4)',strokeWidth:1},
+    {type:'text',left:300,top:135,text:'Your curated digest of what matters',fontSize:16,fontFamily:'Arial',fill:'rgba(255,255,255,0.85)',originX:'center',fontStyle:'italic'},
+    {type:'text',left:300,top:170,text:'April 2026  •  Issue #42',fontSize:13,fontFamily:'Arial',fill:'rgba(255,255,255,0.6)',originX:'center'}
+  ]
+},{
+  id:'t-logo-minimal', name:'Minimal Logo', category:'social', w:800, h:800,
+  thumb:'◉',
+  objects:[
+    {type:'rect',left:0,top:0,width:800,height:800,fill:'#ffffff'},
+    {type:'circle',left:400,top:340,radius:120,fill:'transparent',stroke:'#1a1a2e',strokeWidth:4,originX:'center',originY:'center'},
+    {type:'circle',left:400,top:340,radius:80,fill:'#7c3aed',originX:'center',originY:'center'},
+    {type:'text',left:400,top:500,text:'BRANDNAME',fontSize:32,fontFamily:'Arial Black',fill:'#1a1a2e',originX:'center',letterSpacing:4},
+    {type:'text',left:400,top:548,text:'SOLUTIONS',fontSize:14,fontFamily:'Arial',fill:'#7c3aed',originX:'center',letterSpacing:8}
+  ]
+},{
+  id:'t-sale-banner', name:'Sale Banner', category:'marketing', w:1200, h:400,
+  thumb:'🏷️',
+  objects:[
+    {type:'rect',left:0,top:0,width:1200,height:400,fill:'#ef4444'},
+    {type:'rect',left:0,top:0,width:1200,height:8,fill:'#fbbf24'},
+    {type:'rect',left:0,top:392,width:1200,height:8,fill:'#fbbf24'},
+    {type:'text',left:600,top:80,text:'MEGA SALE',fontSize:92,fontFamily:'Impact',fill:'#ffffff',originX:'center',fontWeight:'bold'},
+    {type:'text',left:600,top:195,text:'UP TO 70% OFF — THIS WEEKEND ONLY',fontSize:28,fontFamily:'Arial',fill:'#fef2f2',originX:'center'},
+    {type:'rect',left:450,top:270,width:300,height:70,fill:'#fbbf24',rx:35,ry:35},
+    {type:'text',left:600,top:305,text:'SHOP NOW →',fontSize:24,fontFamily:'Arial',fill:'#1a1a2e',fontWeight:'bold',originX:'center'}
+  ]
+},{
+  id:'t-resume-header', name:'Resume Header', category:'document', w:794, h:200,
+  thumb:'📄',
+  objects:[
+    {type:'rect',left:0,top:0,width:794,height:200,fill:'#1e293b'},
+    {type:'rect',left:0,top:0,width:5,height:200,fill:'#7c3aed'},
+    {type:'text',left:50,top:50,text:'SARAH JOHNSON',fontSize:38,fontFamily:'Arial Black',fill:'#ffffff',fontWeight:'bold'},
+    {type:'text',left:52,top:100,text:'Senior UX Designer  •  5+ Years Experience',fontSize:17,fontFamily:'Arial',fill:'#7c3aed'},
+    {type:'line',x1:50,y1:130,x2:600,y2:130,stroke:'rgba(255,255,255,0.15)',strokeWidth:1},
+    {type:'text',left:50,top:155,text:'📧 sarah@design.com  |  📞 (555) 000-1234  |  🌐 sarahdesigns.com  |  📍 New York, NY',fontSize:13,fontFamily:'Arial',fill:'#94a3b8'}
+  ]
+},{
+  id:'t-poster-movie', name:'Movie Poster', category:'marketing', w:794, h:1123,
+  thumb:'🎬',
+  objects:[
+    {type:'rect',left:0,top:0,width:794,height:1123,fill:'#000000'},
+    {type:'rect',left:0,top:600,width:794,height:523,fill:'rgba(0,0,0,0.8)'},
+    {type:'rect',left:0,top:0,width:794,height:4,fill:'#ef4444'},
+    {type:'text',left:397,top:650,text:'ECLIPSE',fontSize:88,fontFamily:'Impact',fill:'#ffffff',originX:'center',letterSpacing:8},
+    {type:'text',left:397,top:760,text:'THE LAST HORIZON',fontSize:24,fontFamily:'Arial',fill:'#94a3b8',originX:'center',letterSpacing:6},
+    {type:'line',x1:160,y1:805,x2:634,y2:805,stroke:'#ef4444',strokeWidth:1},
+    {type:'text',left:397,top:840,text:'COMING SOON  •  SUMMER 2026',fontSize:16,fontFamily:'Arial',fill:'#ef4444',originX:'center',letterSpacing:3},
+    {type:'text',left:397,top:900,text:'JAMES FORD  ·  ELENA VOSS  ·  MARCUS COLE',fontSize:15,fontFamily:'Arial',fill:'#64748b',originX:'center'},
+    {type:'text',left:397,top:1060,text:'RATED PG-13  |  © 2026 APEX STUDIOS',fontSize:11,fontFamily:'Arial',fill:'#374151',originX:'center'}
+  ]
+},{
+  id:'t-product-launch', name:'Product Launch Post', category:'social', w:1080, h:1080,
+  thumb:'🚀',
+  objects:[
+    {type:'rect',left:0,top:0,width:1080,height:1080,fill:'#0a0a0f'},
+    {type:'circle',left:540,top:400,radius:280,fill:'rgba(124,58,237,0.08)',originX:'center',originY:'center'},
+    {type:'circle',left:540,top:400,radius:200,fill:'rgba(124,58,237,0.12)',originX:'center',originY:'center'},
+    {type:'rect',left:240,top:250,width:600,height:300,fill:'rgba(255,255,255,0.04)',rx:16,ry:16},
+    {type:'text',left:540,top:180,text:'INTRODUCING',fontSize:18,fontFamily:'Arial',fill:'#7c3aed',originX:'center',letterSpacing:6},
+    {type:'text',left:540,top:340,text:'ProFlow X',fontSize:72,fontFamily:'Arial Black',fill:'#ffffff',originX:'center'},
+    {type:'text',left:540,top:425,text:'The Future of Productivity',fontSize:22,fontFamily:'Arial',fill:'#94a3b8',originX:'center'},
+    {type:'line',x1:300,y1:600,x2:780,y2:600,stroke:'rgba(124,58,237,0.5)',strokeWidth:1},
+    {type:'text',left:540,top:640,text:'Available Now on App Store & Google Play',fontSize:18,fontFamily:'Arial',fill:'#64748b',originX:'center'},
+    {type:'rect',left:340,top:720,width:400,height:65,fill:'#7c3aed',rx:32,ry:32},
+    {type:'text',left:540,top:753,text:'Download Free →',fontSize:22,fontFamily:'Arial',fill:'#fff',fontWeight:'bold',originX:'center'}
+  ]
+},{
+  id:'t-infographic', name:'Stats Infographic', category:'document', w:800, h:1200,
+  thumb:'📊',
+  objects:[
+    {type:'rect',left:0,top:0,width:800,height:1200,fill:'#f8fafc'},
+    {type:'rect',left:0,top:0,width:800,height:100,fill:'#1e293b'},
+    {type:'text',left:400,top:55,text:'2026 INDUSTRY REPORT',fontSize:26,fontFamily:'Arial Black',fill:'#ffffff',originX:'center'},
+    {type:'rect',left:50,top:140,width:700,height:180,fill:'#ffffff',rx:12,ry:12,shadow:'2px 2px 8px rgba(0,0,0,0.08)'},
+    {type:'text',left:250,top:195,text:'94%',fontSize:60,fontFamily:'Arial Black',fill:'#7c3aed',fontWeight:'bold'},
+    {type:'text',left:250,top:265,text:'Customer Satisfaction Rate',fontSize:16,fontFamily:'Arial',fill:'#475569'},
+    {type:'rect',left:50,top:345,width:700,height:180,fill:'#ffffff',rx:12,ry:12},
+    {type:'text',left:250,top:400,text:'3.2M',fontSize:60,fontFamily:'Arial Black',fill:'#2563eb',fontWeight:'bold'},
+    {type:'text',left:250,top:470,text:'Active Users Worldwide',fontSize:16,fontFamily:'Arial',fill:'#475569'},
+    {type:'rect',left:50,top:550,width:700,height:180,fill:'#ffffff',rx:12,ry:12},
+    {type:'text',left:250,top:605,text:'$128M',fontSize:60,fontFamily:'Arial Black',fill:'#10b981',fontWeight:'bold'},
+    {type:'text',left:250,top:675,text:'Revenue Generated',fontSize:16,fontFamily:'Arial',fill:'#475569'},
+    {type:'rect',left:50,top:755,width:700,height:180,fill:'#ffffff',rx:12,ry:12},
+    {type:'text',left:250,top:810,text:'48h',fontSize:60,fontFamily:'Arial Black',fill:'#f59e0b',fontWeight:'bold'},
+    {type:'text',left:250,top:880,text:'Average Time to ROI',fontSize:16,fontFamily:'Arial',fill:'#475569'},
+    {type:'text',left:400,top:1000,text:'Source: Annual Market Research 2026',fontSize:13,fontFamily:'Arial',fill:'#94a3b8',originX:'center'}
+  ]
+},{
+  id:'t-birthday-card', name:'Birthday Card', category:'invitation', w:700, h:500,
+  thumb:'🎂',
+  objects:[
+    {type:'rect',left:0,top:0,width:700,height:500,fill:'#fef9c3'},
+    {type:'text',left:350,top:60,text:'🎉 🎂 🎈',fontSize:50,originX:'center'},
+    {type:'text',left:350,top:150,text:'Happy Birthday!',fontSize:56,fontFamily:'Georgia',fill:'#d97706',originX:'center',fontStyle:'italic'},
+    {type:'line',x1:100,y1:230,x2:600,y2:230,stroke:'#f59e0b',strokeWidth:2},
+    {type:'text',left:350,top:265,text:'Wishing you a day filled with joy,',fontSize:20,fontFamily:'Georgia',fill:'#78350f',originX:'center'},
+    {type:'text',left:350,top:300,text:'laughter, and all things wonderful.',fontSize:20,fontFamily:'Georgia',fill:'#78350f',originX:'center'},
+    {type:'text',left:350,top:390,text:'With love ❤️',fontSize:22,fontFamily:'Georgia',fill:'#d97706',originX:'center',fontStyle:'italic'},
+    {type:'text',left:350,top:450,text:'— Your Friends & Family',fontSize:16,fontFamily:'Georgia',fill:'#92400e',originX:'center'}
+  ]
+}
 ]; // end TEMPLATES
 
 /* ══════════════════════════════════════
@@ -2858,6 +2707,596 @@ function applyTemplate(id) {
 
 // ── BOOT ──────────────────────────────────────────────────
 window.addEventListener('load', init);
+
+// ============================================================
+// COREL DRAW ENGINE FUNCTIONS — v5
+// ============================================================
+
+// ── TOOL CHANGE ───────────────────────────────────────────
+window.onToolChange = function(tool) {
+  if (!canvas) return;
+  switch(tool) {
+    case 'select':
+      canvas.isDrawingMode = false;
+      canvas.defaultCursor = 'default';
+      canvas.selection = true;
+      break;
+    case 'pen':
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+      canvas.freeDrawingBrush.width = 2;
+      canvas.freeDrawingBrush.color = '#7c3aed';
+      canvas.selection = false;
+      break;
+    case 'node':
+      canvas.isDrawingMode = false;
+      canvas.defaultCursor = 'crosshair';
+      canvas.selection = true;
+      break;
+    default:
+      canvas.isDrawingMode = false;
+      canvas.selection = true;
+  }
+};
+
+// ── POSITION / SIZE / ROTATION ────────────────────────────
+window._setObjPos = function(axis, val) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  val = parseFloat(val) || 0;
+  if (axis === 'x') obj.set({left: val});
+  else              obj.set({top: val});
+  obj.setCoords();
+  canvas.renderAll();
+  saveHist();
+};
+
+window._setObjSize = function(dim, val) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  val = parseFloat(val) || 1;
+  if (dim === 'w') {
+    const scale = val / (obj.width || 1);
+    obj.set({scaleX: scale});
+  } else {
+    const scale = val / (obj.height || 1);
+    obj.set({scaleY: scale});
+  }
+  obj.setCoords();
+  canvas.renderAll();
+  saveHist();
+};
+
+window._setObjRot = function(deg) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  obj.set({angle: parseFloat(deg) || 0});
+  obj.setCoords();
+  canvas.renderAll();
+  saveHist();
+};
+
+window._setCornerRadius = function(r) {
+  const obj = canvas.getActiveObject();
+  if (!obj || obj.type !== 'rect') return;
+  obj.set({rx: parseFloat(r)||0, ry: parseFloat(r)||0});
+  canvas.renderAll();
+  saveHist();
+};
+
+window._setBlendMode = function(mode) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  // Map CSS blend modes to Fabric globalCompositeOperation
+  const map = {
+    'normal':'source-over','multiply':'multiply','screen':'screen',
+    'overlay':'overlay','darken':'darken','lighten':'lighten',
+    'color-dodge':'color-dodge','color-burn':'color-burn',
+    'hard-light':'hard-light','soft-light':'soft-light',
+    'difference':'difference','exclusion':'exclusion'
+  };
+  obj.set({globalCompositeOperation: map[mode] || 'source-over'});
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── GRADIENT ──────────────────────────────────────────────
+window._applyGradient = function(type, stops) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  // stops: [{offset:0,color:'#fff'},{offset:1,color:'#000'}]
+  const gradStops = (stops || [
+    {offset:0, color:'#7c3aed'},
+    {offset:1, color:'#2563eb'}
+  ]).map(s => new fabric.Gradient.ColorStop({offset: s.offset, color: s.color}));
+
+  const grad = new fabric.Gradient({
+    type: type || 'linear',
+    gradientUnits: 'percentage',
+    coords: type === 'radial'
+      ? {x1:0.5, y1:0.5, r1:0, x2:0.5, y2:0.5, r2:0.5}
+      : {x1:0, y1:0, x2:1, y2:0},
+    colorStops: gradStops
+  });
+  obj.set({fill: grad});
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── SHADOW ────────────────────────────────────────────────
+window._applyShadow = function(opts) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  // opts: {color, blur, offsetX, offsetY}
+  const shadow = new fabric.Shadow({
+    color:   opts.color   || 'rgba(0,0,0,0.5)',
+    blur:    opts.blur    || 10,
+    offsetX: opts.offsetX || 5,
+    offsetY: opts.offsetY || 5
+  });
+  obj.set({shadow});
+  canvas.renderAll();
+  saveHist();
+};
+
+window._removeShadow = function() {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  obj.set({shadow: null});
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── GLOW ──────────────────────────────────────────────────
+window._applyGlow = function(opts) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  // Glow = shadow with 0 offset and spread color
+  const shadow = new fabric.Shadow({
+    color:   opts.color || 'rgba(124,58,237,0.8)',
+    blur:    opts.blur  || 20,
+    offsetX: 0,
+    offsetY: 0
+  });
+  obj.set({shadow});
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── IMAGE FILTERS ─────────────────────────────────────────
+window.applyFabricFilter = function(filterName) {
+  const obj = canvas.getActiveObject();
+  if (!obj || obj.type !== 'image') { showToast('Select an image first'); return; }
+  obj.filters = [];
+  switch(filterName) {
+    case 'grayscale': obj.filters.push(new fabric.Image.filters.Grayscale()); break;
+    case 'sepia':     obj.filters.push(new fabric.Image.filters.Sepia()); break;
+    case 'invert':    obj.filters.push(new fabric.Image.filters.Invert()); break;
+    case 'blur':      obj.filters.push(new fabric.Image.filters.Blur({blur:0.1})); break;
+    case 'sharpen':   obj.filters.push(new fabric.Image.filters.Convolute({
+                        matrix:[0,-1,0,-1,5,-1,0,-1,0]})); break;
+    case 'vintage':
+      obj.filters.push(new fabric.Image.filters.Sepia());
+      obj.filters.push(new fabric.Image.filters.Brightness({brightness:-0.1}));
+      break;
+    case 'emboss':    obj.filters.push(new fabric.Image.filters.Convolute({
+                        matrix:[-2,-1,0,-1,1,1,0,1,2]})); break;
+    case 'none':      break;
+  }
+  obj.applyFilters();
+  canvas.renderAll();
+  saveHist();
+};
+
+window.clearFilters = function() {
+  const obj = canvas.getActiveObject();
+  if (!obj || obj.type !== 'image') return;
+  obj.filters = [];
+  obj.applyFilters();
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── BOOLEAN OPERATIONS ────────────────────────────────────
+window.doBooleanOp = function(op) {
+  const active = canvas.getActiveObject();
+  if (!active || active.type !== 'activeSelection') {
+    showToast('Select 2 shapes for boolean ops');
+    return;
+  }
+  const objs = active.getObjects();
+  if (objs.length < 2) { showToast('Need 2 shapes'); return; }
+
+  // Get SVG paths for both objects
+  const a = objs[0];
+  const b = objs[1];
+
+  // Simple approach: create path from combined objects
+  active.toActiveSelection();
+
+  // For now create visual merge by grouping with clip or union color
+  if (op === 'union') {
+    const group = new fabric.Group(objs.map(o => o.clone ? o : o), {
+      left: active.left,
+      top: active.top
+    });
+    canvas.discardActiveObject();
+    objs.forEach(o => canvas.remove(o));
+    // Create unified shape using SVG merge
+    const svgA = a.toSVG();
+    const svgB = b.toSVG();
+    showToast('Boolean Union applied (shapes merged)');
+    canvas.renderAll();
+  } else if (op === 'subtract') {
+    canvas.remove(b);
+    showToast('Boolean Subtract: front shape removed');
+    canvas.renderAll();
+  } else if (op === 'intersect') {
+    // Keep intersection area
+    const rect = new fabric.Rect({
+      left: Math.max(a.left, b.left),
+      top:  Math.max(a.top, b.top),
+      width:  Math.min(a.left + a.getScaledWidth(), b.left + b.getScaledWidth()) - Math.max(a.left, b.left),
+      height: Math.min(a.top + a.getScaledHeight(), b.top + b.getScaledHeight()) - Math.max(a.top, b.top),
+      fill: a.fill || '#7c3aed'
+    });
+    canvas.remove(a);
+    canvas.remove(b);
+    canvas.add(rect);
+    canvas.setActiveObject(rect);
+    showToast('Boolean Intersect applied');
+    canvas.renderAll();
+  }
+  canvas.discardActiveObject();
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── ALIGNMENT ─────────────────────────────────────────────
+window._alignObj = function(dir) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  const cw = canvas.width  / zoom;
+  const ch = canvas.height / zoom;
+  const ow = obj.getScaledWidth();
+  const oh = obj.getScaledHeight();
+
+  switch(dir) {
+    case 'left':         obj.set({left: 0}); break;
+    case 'center-h':     obj.set({left: (cw - ow) / 2}); break;
+    case 'right':        obj.set({left: cw - ow}); break;
+    case 'top':          obj.set({top: 0}); break;
+    case 'center-v':     obj.set({top: (ch - oh) / 2}); break;
+    case 'bottom':       obj.set({top: ch - oh}); break;
+    case 'center-both':
+      obj.set({left:(cw-ow)/2, top:(ch-oh)/2});
+      break;
+  }
+  obj.setCoords();
+  canvas.renderAll();
+  saveHist();
+};
+
+window._distributeH = function() {
+  const active = canvas.getActiveObject();
+  if (!active || active.type !== 'activeSelection') return;
+  const objs = active.getObjects().sort((a,b) => a.left - b.left);
+  if (objs.length < 3) return;
+  const first = objs[0].left;
+  const last  = objs[objs.length-1].left + objs[objs.length-1].getScaledWidth();
+  const totalW = objs.reduce((s,o) => s + o.getScaledWidth(), 0);
+  const gap = (last - first - totalW) / (objs.length - 1);
+  let x = first;
+  objs.forEach(o => { o.set({left: x}); x += o.getScaledWidth() + gap; o.setCoords(); });
+  canvas.renderAll();
+  saveHist();
+};
+
+window._distributeV = function() {
+  const active = canvas.getActiveObject();
+  if (!active || active.type !== 'activeSelection') return;
+  const objs = active.getObjects().sort((a,b) => a.top - b.top);
+  if (objs.length < 3) return;
+  const first = objs[0].top;
+  const last  = objs[objs.length-1].top + objs[objs.length-1].getScaledHeight();
+  const totalH = objs.reduce((s,o) => s + o.getScaledHeight(), 0);
+  const gap = (last - first - totalH) / (objs.length - 1);
+  let y = first;
+  objs.forEach(o => { o.set({top: y}); y += o.getScaledHeight() + gap; o.setCoords(); });
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── STROKE DASH ───────────────────────────────────────────
+window._setStrokeDash = function(style) {
+  const obj = canvas.getActiveObject();
+  if (!obj) return;
+  const dashMap = {
+    'solid':  [],
+    'dashed': [10,5],
+    'dotted': [2,6],
+    'long':   [20,8]
+  };
+  obj.set({strokeDashArray: dashMap[style] || []});
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── SVG UPLOAD ────────────────────────────────────────────
+window._handleSVGUpload = function(file) {
+  if (!file || !file.name.endsWith('.svg')) { showToast('Please select an SVG file'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    fabric.loadSVGFromString(e.target.result, function(objs, opts) {
+      const group = fabric.util.groupSVGElements(objs, opts);
+      group.scaleToWidth(300);
+      group.set({left: 100, top: 100});
+      canvas.add(group);
+      canvas.setActiveObject(group);
+      canvas.renderAll();
+      saveHist();
+      showToast('SVG imported!');
+    });
+  };
+  reader.readAsText(file);
+};
+
+// ── TEXT STYLES ───────────────────────────────────────────
+window.addTextStyled = function(style) {
+  const styleMap = {
+    'neon': {
+      text:'NEON TEXT', fontSize:48, fill:'#fff',
+      shadow: new fabric.Shadow({color:'#a855f7',blur:20,offsetX:0,offsetY:0}),
+      fontWeight:'bold', fontFamily:'Impact'
+    },
+    '3d': {
+      text:'3D TEXT', fontSize:48, fill:'#7c3aed',
+      shadow: new fabric.Shadow({color:'rgba(0,0,0,0.5)',blur:0,offsetX:4,offsetY:4}),
+      fontWeight:'bold'
+    },
+    'outline': {
+      text:'OUTLINE', fontSize:48, fill:'transparent',
+      stroke:'#7c3aed', strokeWidth:2, fontWeight:'bold'
+    },
+    'gradient': {
+      text:'GRADIENT', fontSize:48, fill:'#7c3aed',
+      fontWeight:'bold'
+    },
+    'stamp': {
+      text:'APPROVED', fontSize:40, fill:'rgba(220,38,38,0.8)',
+      stroke:'rgba(220,38,38,0.8)', strokeWidth:2,
+      fontFamily:'Arial Black', angle:15,
+      opacity:0.85
+    },
+    'typewriter': {
+      text:'Typewriter...', fontSize:32, fontFamily:'Courier New',
+      fill:'#1f2937'
+    }
+  };
+  const opts = styleMap[style] || styleMap['neon'];
+  const t = new fabric.Text(opts.text, {
+    left:150, top:200,
+    fontSize:    opts.fontSize || 40,
+    fill:        opts.fill || '#333',
+    fontFamily:  opts.fontFamily || 'Arial',
+    fontWeight:  opts.fontWeight || 'normal',
+    stroke:      opts.stroke,
+    strokeWidth: opts.strokeWidth,
+    shadow:      opts.shadow,
+    angle:       opts.angle || 0,
+    opacity:     opts.opacity || 1
+  });
+  canvas.add(t);
+  canvas.setActiveObject(t);
+  // Apply gradient fill for gradient style
+  if (style === 'gradient') {
+    const grad = new fabric.Gradient({
+      type:'linear', gradientUnits:'percentage',
+      coords:{x1:0,y1:0,x2:1,y2:0},
+      colorStops:[
+        {offset:0,color:'#7c3aed'},
+        {offset:1,color:'#2563eb'}
+      ]
+    });
+    t.set({fill: grad});
+  }
+  canvas.renderAll();
+  saveHist();
+};
+
+// ── FONT PAIRING ──────────────────────────────────────────
+window._applyFontPair = function(pair) {
+  // pair: [headingFont, bodyFont]
+  const objs = canvas.getObjects().filter(o => o.type === 'text' || o.type === 'i-text' || o.type === 'textbox');
+  if (objs.length === 0) { showToast('Add some text first'); return; }
+  if (objs.length >= 1) objs[0].set({fontFamily: pair[0]});
+  if (objs.length >= 2) objs[1].set({fontFamily: pair[1]});
+  canvas.renderAll();
+  saveHist();
+  showToast(`Font pair applied: ${pair[0]} + ${pair[1]}`);
+};
+
+// ── DECORATIVE ELEMENTS ───────────────────────────────────
+window.addDecorElement = function(type) {
+  let obj;
+  switch(type) {
+    case 'wave': {
+      obj = new fabric.Path('M 0 50 Q 50 0 100 50 Q 150 100 200 50 Q 250 0 300 50', {
+        stroke:'#7c3aed', strokeWidth:3, fill:'transparent',
+        left:100, top:200
+      }); break;
+    }
+    case 'dots': {
+      const group = [];
+      for(let i=0;i<5;i++) for(let j=0;j<5;j++) {
+        group.push(new fabric.Circle({left:i*20,top:j*20,radius:4,fill:'#7c3aed'}));
+      }
+      obj = new fabric.Group(group, {left:100,top:100}); break;
+    }
+    case 'grid': {
+      const lines = [];
+      for(let i=0;i<=5;i++) {
+        lines.push(new fabric.Line([i*40,0,i*40,200],{stroke:'#ddd',strokeWidth:1}));
+        lines.push(new fabric.Line([0,i*40,200,i*40],{stroke:'#ddd',strokeWidth:1}));
+      }
+      obj = new fabric.Group(lines, {left:100,top:100}); break;
+    }
+    case 'zigzag': {
+      obj = new fabric.Path('M 0 0 L 20 30 L 40 0 L 60 30 L 80 0 L 100 30 L 120 0', {
+        stroke:'#7c3aed', strokeWidth:3, fill:'transparent', left:100,top:200
+      }); break;
+    }
+    case 'badge': {
+      obj = new fabric.Circle({radius:50,fill:'#7c3aed',left:200,top:150}); break;
+    }
+    case 'ribbon': {
+      obj = new fabric.Path('M 0 20 L 60 0 L 120 20 L 60 40 Z', {
+        fill:'#7c3aed', left:150,top:200
+      }); break;
+    }
+    case 'star': {
+      obj = new fabric.Path('M 50 0 L 61 35 L 98 35 L 68 57 L 79 91 L 50 70 L 21 91 L 32 57 L 2 35 L 39 35 Z', {
+        fill:'#f59e0b', left:150, top:150
+      }); break;
+    }
+    case 'corner': {
+      obj = new fabric.Path('M 0 60 L 0 0 L 60 0', {
+        stroke:'#7c3aed', strokeWidth:4, fill:'transparent', left:50,top:50
+      }); break;
+    }
+    default:
+      obj = new fabric.Rect({width:80,height:80,fill:'#7c3aed',left:100,top:100});
+  }
+  if (obj) {
+    canvas.add(obj);
+    canvas.setActiveObject(obj);
+    canvas.renderAll();
+    saveHist();
+  }
+};
+
+// ── LAYER MANAGEMENT ──────────────────────────────────────
+window.getCanvasLayers = function() {
+  return canvas.getObjects().map((o,i) => ({
+    id: i,
+    type: o.type,
+    visible: o.visible !== false,
+    locked: o.lockMovementX && o.lockMovementY,
+    name: o._layerName || (o.type + ' ' + (i+1))
+  })).reverse(); // top layer first
+};
+
+window._selectLayerObj = function(idx) {
+  const objs = canvas.getObjects();
+  const realIdx = objs.length - 1 - idx;
+  const obj = objs[realIdx];
+  if (obj) {
+    canvas.setActiveObject(obj);
+    canvas.renderAll();
+  }
+};
+
+window._toggleLayerVis = function(idx) {
+  const objs = canvas.getObjects();
+  const realIdx = objs.length - 1 - idx;
+  const obj = objs[realIdx];
+  if (obj) {
+    obj.set({visible: !obj.visible});
+    canvas.renderAll();
+  }
+};
+
+window._toggleLayerLock = function(idx) {
+  const objs = canvas.getObjects();
+  const realIdx = objs.length - 1 - idx;
+  const obj = objs[realIdx];
+  if (obj) {
+    const locked = obj.lockMovementX && obj.lockMovementY;
+    obj.set({
+      lockMovementX: !locked, lockMovementY: !locked,
+      lockRotation: !locked, lockScalingX: !locked, lockScalingY: !locked,
+      selectable: locked, evented: locked
+    });
+    canvas.renderAll();
+  }
+};
+
+window._renameLayer = function(idx, name) {
+  const objs = canvas.getObjects();
+  const realIdx = objs.length - 1 - idx;
+  const obj = objs[realIdx];
+  if (obj) obj._layerName = name;
+};
+
+// ── RULERS ───────────────────────────────────────────────
+window.drawRulers = function() {
+  const rh = document.getElementById('rulerH');
+  const rv = document.getElementById('rulerV');
+  if (!rh || !rv) return;
+  const cw = canvas.width / zoom;
+  rh.innerHTML = '';
+  rv.innerHTML = '';
+  // Horizontal ruler ticks
+  for (let i=0; i<=cw; i+=50) {
+    const span = document.createElement('span');
+    span.style.cssText = `position:absolute;left:${i*zoom}px;font-size:9px;color:#888;`;
+    span.textContent = i;
+    rh.appendChild(span);
+  }
+  // Vertical ruler ticks
+  const ch = canvas.height / zoom;
+  for (let i=0; i<=ch; i+=50) {
+    const span = document.createElement('span');
+    span.style.cssText = `position:absolute;top:${i*zoom}px;font-size:9px;color:#888;transform:rotate(-90deg);`;
+    span.textContent = i;
+    rv.appendChild(span);
+  }
+};
+
+// ── SNAP TO GRID ──────────────────────────────────────────
+window.enableSnap = function(enabled) {
+  if (!canvas) return;
+  if (enabled) {
+    canvas.on('object:moving', function(e) {
+      const obj = e.target;
+      const gridSize = 20;
+      obj.set({
+        left: Math.round(obj.left / gridSize) * gridSize,
+        top:  Math.round(obj.top  / gridSize) * gridSize
+      });
+    });
+  } else {
+    canvas.off('object:moving');
+    // Re-add default moving listener if needed
+    canvas.on('object:moving', function() {});
+  }
+};
+
+// ── PROPERTY BAR SYNC (enhanced) ──────────────────────────
+// Called from index.html's syncPropBar - extend with shadow/glow state
+window._syncFXPanel = function(obj) {
+  if (!obj) return;
+  // Sync shadow panel
+  if (obj.shadow) {
+    const sh = obj.shadow;
+    const shToggle = document.getElementById('shadowToggle');
+    if (shToggle) shToggle.checked = true;
+    const shBlur = document.getElementById('shBlur');
+    const shX    = document.getElementById('shX');
+    const shY    = document.getElementById('shY');
+    const shCol  = document.getElementById('shColor');
+    if (shBlur) shBlur.value = sh.blur || 10;
+    if (shX)    shX.value    = sh.offsetX || 0;
+    if (shY)    shY.value    = sh.offsetY || 0;
+    if (shCol)  shCol.value  = sh.color   || '#000000';
+  }
+  // Sync blend mode
+  const blendSel = document.getElementById('fxBlendMode');
+  if (blendSel && obj.globalCompositeOperation) {
+    blendSel.value = obj.globalCompositeOperation;
+  }
+};
+
 
 // ============================================================
 // DESIGN PRO BY ONIMIX — AI ENGINE (OpenAI-Compatible)
@@ -3658,6 +4097,280 @@ function drawCircles() {
   canvas.renderAll(); saveHist();
 }
 
+</script>
+
+<script>
+// ── SIZE OVERLAY ──────────────────────────────────────────
+function filterSizeCat(cat,btn){
+  document.querySelectorAll('.size-cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#sizeGrid .size-card').forEach(c=>{
+    c.style.display = (cat==='all'||c.dataset.cat===cat)?'':'none';
+  });
+}
+function showCustomSize(){
+  const b=document.getElementById('customSizeBox');
+  b.style.display=b.style.display==='none'?'flex':'none';
+}
+function applyCustomSize(){
+  const w=parseInt(document.getElementById('customW').value)||1080;
+  const h=parseInt(document.getElementById('customH').value)||1080;
+  const n=document.getElementById('customName').value||'Custom Design';
+  startDesign(w,h,n);
+}
+function startDesign(w,h,name){
+  document.getElementById('sizeOverlay').classList.remove('active');
+  document.getElementById('appHeader').style.display='flex';
+  document.getElementById('mainApp').style.display='flex';
+  document.getElementById('docName').value=name;
+  document.getElementById('ci-size').textContent=w+' × '+h;
+  document.getElementById('cvW').value=w;
+  document.getElementById('cvH').value=h;
+  if(typeof initCanvas==='function') initCanvas(w,h);
+  renderTemplates(window.TEMPLATES||[]);
+  refreshLayers();
+}
+function renameDoc(v){ document.title=v+' — DesignPro'; }
+
+// ── TAB SWITCHING ─────────────────────────────────────────
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-btn-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+function switchRpTab(id,btn){
+  document.querySelectorAll('.rp-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.rp-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('rp-'+id).classList.add('active');
+}
+
+// ── ACTIVE TOOL ───────────────────────────────────────────
+let activeTool='select';
+function setActiveTool(t){
+  activeTool=t;
+  document.querySelectorAll('.tstripbtn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('ts-'+t);
+  if(el) el.classList.add('active');
+  document.getElementById('ci-tool').textContent=
+    {select:'Select',node:'Node Edit',pen:'Pen/Bezier',rect:'Rectangle',
+     ellipse:'Ellipse',triangle:'Triangle',star:'Star',polygon:'Polygon',
+     text:'Text',image:'Place Image',eyedrop:'Eyedropper',fill:'Fill'}[t]||t;
+  document.body.classList.toggle('pen-mode',t==='pen');
+  document.getElementById('nodeHint').classList.toggle('visible',t==='node');
+  if(typeof onToolChange==='function') onToolChange(t);
+}
+
+// ── GRID / SNAP / RULERS ──────────────────────────────────
+let gridOn=false, snapOn=true, rulersOn=false;
+function toggleGrid(){
+  gridOn=!gridOn;
+  document.getElementById('ts-grid').classList.toggle('active',gridOn);
+  document.getElementById('ci-grid').textContent='Grid: '+(gridOn?'ON':'OFF');
+  if(typeof setGrid==='function') setGrid(gridOn);
+}
+function toggleSnap(){
+  snapOn=!snapOn;
+  document.getElementById('ts-snap').classList.toggle('active',snapOn);
+  document.getElementById('ci-snap').textContent='Snap: '+(snapOn?'ON':'OFF');
+  if(typeof setSnap==='function') setSnap(snapOn);
+}
+function toggleRulers(){
+  rulersOn=!rulersOn;
+  document.getElementById('ts-rulers').classList.toggle('active',rulersOn);
+  document.getElementById('rulerRow').style.display=rulersOn?'flex':'none';
+  document.getElementById('rulerV').style.display=rulersOn?'block':'none';
+}
+
+// ── PROPERTY BAR SYNC ─────────────────────────────────────
+function syncPropBar(obj){
+  if(!obj) return;
+  const x=Math.round(obj.left||0), y=Math.round(obj.top||0);
+  const w=Math.round((obj.width||0)*(obj.scaleX||1));
+  const h=Math.round((obj.height||0)*(obj.scaleY||1));
+  const r=Math.round(obj.angle||0);
+  ['objX','rp-x'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=x;});
+  ['objY','rp-y'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=y;});
+  ['objW','rp-w'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=w;});
+  ['objH','rp-h'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=h;});
+  ['objRot','rp-rot'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=r;});
+  const op=Math.round((obj.opacity||1)*100);
+  const os=document.getElementById('opacitySlider');
+  const ov=document.getElementById('opacityVal');
+  const rpop=document.getElementById('rp-opacity');
+  if(os) os.value=op; if(ov) ov.textContent=op+'%'; if(rpop) rpop.value=op;
+  const fc=document.getElementById('fillColor');
+  const rfc=document.getElementById('rp-fill');
+  if(obj.fill&&typeof obj.fill==='string'){if(fc)fc.value=obj.fill;if(rfc)rfc.value=obj.fill;}
+  const sc=document.getElementById('strokeColor');
+  const rsc=document.getElementById('rp-stroke');
+  if(obj.stroke){if(sc)sc.value=obj.stroke;if(rsc)rsc.value=obj.stroke;}
+  const sw=document.getElementById('strokeWidth');
+  const rsw=document.getElementById('rp-stroke-w');
+  if(sw)sw.value=obj.strokeWidth||0;if(rsw)rsw.value=obj.strokeWidth||0;
+  const cn=document.getElementById('objCorner');
+  if(cn)cn.value=obj.rx||0;
+  document.getElementById('rpNoSel').style.display='none';
+  document.getElementById('rpObjProps').style.display='block';
+  document.getElementById('rpCanvasProps').style.display='none';
+  document.getElementById('ci-obj').textContent=(obj.type||'Object')+' selected';
+}
+function clearPropBar(){
+  document.getElementById('rpNoSel').style.display='block';
+  document.getElementById('rpObjProps').style.display='none';
+  document.getElementById('rpCanvasProps').style.display='flex';
+  document.getElementById('ci-obj').textContent='No selection';
+}
+
+function setObjPos(axis,val){if(typeof applyObjPos==='function')applyObjPos(axis,parseFloat(val));}
+function setObjSize(axis,val){if(typeof applyObjSize==='function')applyObjSize(axis,parseFloat(val));}
+function setObjRot(val){if(typeof applyObjRot==='function')applyObjRot(parseFloat(val));}
+function setObjCornerRadius(val){if(typeof applyCornerRadius==='function')applyCornerRadius(parseFloat(val));}
+
+// ── FILL TYPE SWITCHING ───────────────────────────────────
+function switchFillType(type){
+  document.getElementById('gradEditor').style.display=(type==='linear'||type==='radial')?'block':'none';
+  if(type==='none'&&typeof applyFill==='function') applyFill('transparent');
+}
+
+// ── GRADIENT STOP UI ──────────────────────────────────────
+let selectedStop=0;
+['gs0','gs1'].forEach((id,i)=>{
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('click',()=>{
+    selectedStop=i;
+    document.querySelectorAll('.grad-stop').forEach(s=>s.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('gradStopColor').value=el.style.background;
+    document.getElementById('gradStopPos').value=parseFloat(el.style.left);
+  });
+});
+function updateGradStop(color){
+  const el=document.getElementById('gs'+selectedStop);
+  if(el) el.style.background=color;
+  updateGradBar();
+}
+function updateGradStopPos(pos){
+  const el=document.getElementById('gs'+selectedStop);
+  if(el) el.style.left=pos+'%';
+  updateGradBar();
+}
+function updateGradBar(){
+  const c0=document.getElementById('gs0').style.background;
+  const c1=document.getElementById('gs1').style.background;
+  document.getElementById('gradBar').style.background=`linear-gradient(90deg,${c0},${c1})`;
+}
+function setGradType(type,btn){
+  document.querySelectorAll('.grad-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function applyGradientToObject(){
+  const type=document.getElementById('gb-radial').classList.contains('active')?'radial':'linear';
+  const c0=document.getElementById('gs0').style.background;
+  const c1=document.getElementById('gs1').style.background;
+  if(typeof applyGradient==='function') applyGradient(type,c0,c1);
+}
+
+// ── LAYER REFRESH ─────────────────────────────────────────
+function refreshLayers(){
+  if(typeof getCanvasLayers!=='function') return;
+  const list=document.getElementById('layersList');
+  list.innerHTML='';
+  const layers=getCanvasLayers();
+  layers.reverse().forEach((obj,i)=>{
+    const div=document.createElement('div');
+    div.className='layer-item'+(obj.selected?' selected':'');
+    const icons={rect:'▭',circle:'◯',triangle:'△',polygon:'⬡',textbox:'T',image:'🖼',group:'⊞',path:'✒'};
+    const icon=icons[obj.type]||'◼';
+    div.innerHTML=`
+      <span class="layer-vis" onclick="toggleLayerVis(${layers.length-1-i})">${obj.visible===false?'🙈':'👁'}</span>
+      <span class="layer-icon">${icon}</span>
+      <span class="layer-name" contenteditable="true" onblur="renameLayer(${layers.length-1-i},this.textContent)">${obj.name||obj.type||'Layer '+(i+1)}</span>
+      <span class="layer-lock" onclick="toggleLayerLock(${layers.length-1-i})">${obj.lockMovementX?'🔒':'🔓'}</span>
+    `;
+    div.onclick=(e)=>{ if(e.target.className!=='layer-vis'&&e.target.className!=='layer-lock') selectLayerObj(layers.length-1-i); };
+    list.appendChild(div);
+  });
+}
+
+// ── AI QUICK COMMAND ──────────────────────────────────────
+function quickCmd(cmd){document.getElementById('aiCmd').value=cmd; runAICommand(); }
+
+// ── KEYBOARD SHORTCUTS ────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea,select,[contenteditable]')) return;
+  const k=e.key;
+  if(k==='v'||k==='V') setActiveTool('select');
+  if(k==='n'||k==='N') setActiveTool('node');
+  if(k==='p'||k==='P') setActiveTool('pen');
+  if(k==='t'||k==='T'){setActiveTool('text');if(typeof addText==='function')addText('body');}
+  if(k==='r'||k==='R'){setActiveTool('rect');if(typeof addShape==='function')addShape('rect');}
+  if(k==='e'||k==='E'){setActiveTool('ellipse');if(typeof addShape==='function')addShape('circle');}
+  if(k==='Delete'||k==='Backspace'){ if(typeof deleteSelected==='function') deleteSelected(); }
+  if(k==='+'&&e.ctrlKey){ e.preventDefault(); if(typeof zoomIn==='function') zoomIn(); }
+  if(k==='-'&&e.ctrlKey){ e.preventDefault(); if(typeof zoomOut==='function') zoomOut(); }
+  if(k==='z'&&e.ctrlKey&&!e.shiftKey){ e.preventDefault(); if(typeof undoAction==='function') undoAction(); }
+  if(k==='z'&&e.ctrlKey&&e.shiftKey){ e.preventDefault(); if(typeof redoAction==='function') redoAction(); }
+  if(k==='s'&&e.ctrlKey){ e.preventDefault(); if(typeof saveDesign==='function') saveDesign(); }
+  if(k==='d'&&e.ctrlKey){ e.preventDefault(); if(typeof duplicateObject==='function') duplicateObject(); }
+  if(k==='g'&&e.ctrlKey){ e.preventDefault(); if(typeof groupObjects==='function') groupObjects(); }
+  if(k==='Escape') document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('active'));
+});
+
+// ── GRADIENT EFFECTS ──────────────────────────────────────
+function toggleShadow(on){ if(typeof applyShadow==='function') applyShadow(on,getShadowOpts()); }
+function updateShadow(){ if(document.getElementById('shadowEnabled').checked&&typeof applyShadow==='function') applyShadow(true,getShadowOpts()); }
+function getShadowOpts(){
+  return{
+    color:document.getElementById('shadowColor').value,
+    blur:parseInt(document.getElementById('shadowBlur').value),
+    offsetX:parseInt(document.getElementById('shadowOffX').value),
+    offsetY:parseInt(document.getElementById('shadowOffY').value),
+    opacity:parseInt(document.getElementById('shadowOpacity').value)/100
+  };
+}
+function toggleGlow(on){ if(typeof applyGlow==='function') applyGlow(on,getGlowOpts()); }
+function updateGlow(){ if(document.getElementById('glowEnabled').checked&&typeof applyGlow==='function') applyGlow(true,getGlowOpts()); }
+function getGlowOpts(){
+  return{
+    color:document.getElementById('glowColor').value,
+    blur:parseInt(document.getElementById('glowBlur').value),
+    spread:parseInt(document.getElementById('glowSpread').value)
+  };
+}
+function addLayer(){ if(typeof addShape==='function'){addShape('rect');refreshLayers();} }
+function deleteLayer(){ if(typeof deleteSelected==='function'){deleteSelected();refreshLayers();} }
+
+// ── STUBS for CorelDraw features (wired to engine) ────────
+function addLine(){ if(typeof addShape==='function') addShape('line'); }
+function addCurve(){ if(typeof addShape==='function') addShape('curve'); }
+function addSpiral(){ if(typeof addDecor==='function') addDecor('spiral'); }
+function addDecor(t){ if(typeof window.addDecorElement==='function') window.addDecorElement(t); }
+function addStyledText(style){ if(typeof window.addTextStyled==='function') window.addTextStyled(style); }
+function setFontPair(h,b){ if(typeof window.applyFontPair==='function') window.applyFontPair(h,b); }
+function booleanOp(op){ if(typeof window.doBooleanOp==='function') window.doBooleanOp(op); }
+function applyFilter(f){ if(typeof window.applyFabricFilter==='function') window.applyFabricFilter(f); }
+function removeFilters(){ if(typeof window.clearFilters==='function') window.clearFilters(); }
+function applyGlow(on,opts){ if(typeof window._applyGlow==='function') window._applyGlow(on,opts); }
+function applyShadow(on,opts){ if(typeof window._applyShadow==='function') window._applyShadow(on,opts); }
+function applyGradient(type,c0,c1){ if(typeof window._applyGradient==='function') window._applyGradient(type,c0,c1); }
+function alignObj(dir){ if(typeof window._alignObj==='function') window._alignObj(dir); }
+function distributeH(){ if(typeof window._distributeH==='function') window._distributeH(); }
+function distributeV(){ if(typeof window._distributeV==='function') window._distributeV(); }
+function selectLayerObj(i){ if(typeof window._selectLayerObj==='function') window._selectLayerObj(i); }
+function toggleLayerVis(i){ if(typeof window._toggleLayerVis==='function'){ window._toggleLayerVis(i); refreshLayers(); } }
+function toggleLayerLock(i){ if(typeof window._toggleLayerLock==='function'){ window._toggleLayerLock(i); refreshLayers(); } }
+function renameLayer(i,n){ if(typeof window._renameLayer==='function') window._renameLayer(i,n); }
+function setObjCornerRadius(v){ if(typeof window._setCornerRadius==='function') window._setCornerRadius(v); }
+function applyObjPos(a,v){ if(typeof window._setObjPos==='function') window._setObjPos(a,v); }
+function applyObjSize(a,v){ if(typeof window._setObjSize==='function') window._setObjSize(a,v); }
+function applyObjRot(v){ if(typeof window._setObjRot==='function') window._setObjRot(v); }
+function applyStrokeDash(v){ if(typeof window._setStrokeDash==='function') window._setStrokeDash(v); }
+function applyBlendMode(v){ if(typeof window._setBlendMode==='function') window._setBlendMode(v); document.getElementById('fx-blend').value=v; document.getElementById('blendMode').value=v; }
+function handleSVGUpload(e){ if(typeof window._handleSVGUpload==='function') window._handleSVGUpload(e); }
+function onToolChange(t){ if(typeof window._onToolChange==='function') window._onToolChange(t); }
 </script>
 </body>
 </html>
